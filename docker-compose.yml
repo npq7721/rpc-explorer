@@ -26,6 +26,6 @@ services:
     build: .
     restart: unless-stopped
     env_file:
-      - ./env-docker
+      - .env-docker
     ports:
       - 80:8888
