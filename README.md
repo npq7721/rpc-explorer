@@ -81,8 +81,9 @@ See `rpc-explorer --help` for the full list of CLI options.
 
 ## Run via Docker
 
-1. `docker build -t rpc-explorer .`
-2. `docker run -p 3002:3002 -it rpc-explorer`
+```
+cp seed raptoreumd/
+docker-compose up --build --force-recreate
 
 # Support
 

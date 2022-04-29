@@ -1,10 +1,8 @@
-FROM node:8 as builder
-WORKDIR /workspace
-COPY . .
+FROM --platform=linux/amd64 node:10
+
+WORKDIR /app
+COPY npm-shrinkwrap.json package.json ./
 RUN npm install
 
-FROM node:8-alpine
-WORKDIR /workspace
-COPY --from=builder /workspace .
-CMD npm start
-EXPOSE 3002
+COPY . .
+ENTRYPOINT [ "/app/entrypoint.sh" ]

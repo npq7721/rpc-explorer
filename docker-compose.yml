@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:6.2.6
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:5.0.4
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: rtmexplorer
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - .mongodb:/data/db
+
+  raptoreumd:
+    build: raptoreumd
+    restart: unless-stopped
+    volumes:
+      - ./raptoreumd/.raptoreumcore:/root/.raptoreumcore
+
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - 80:8888
