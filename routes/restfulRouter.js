@@ -13,8 +13,7 @@ const request = require('request').defaults({ rejectUnauthorized: false });
 
 class RestfulRouter {
 	constructor(router, apiProperties) {
-		this.apiProperties = apiProperties;
-		var self = this;
+		let self = this;
 		apiProperties.api_map.forEach(api => {
 			router.get(`/${api.uri}`, (req, res, next) => {
 				var method = api.method ? api.method : api.name
@@ -24,7 +23,8 @@ class RestfulRouter {
 						res.send(JSON.stringify(result, null, 4));
 					} else {
 						res.set('Content-Type', 'text/plain');
-						res.send(result.toString());
+						console.log(result);
+						res.send(self.checkAndParseString(result));
 					}
 					next();
 				}).catch(e => {
@@ -34,7 +34,7 @@ class RestfulRouter {
 				});
 			});
 		});
-		var pageRender = new PageRender(router, "/", "api");
+		let pageRender = new PageRender(router, "/", "api");
 		pageRender.prepareRender(this.infoPageContent.bind(this));
 	}
 
@@ -570,7 +570,7 @@ class RestfulRouter {
 
 	checkAndParseString(value) {
 		if(value) {
-			value = (typeof value) === "string" ? value.trim() : value.toString();
+			value = (typeof value) === "string" ? value.trim() : JSON.stringify(value);
 			return value !== "" ? value : null;
 		}
 		return null;

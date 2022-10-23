@@ -278,7 +278,7 @@ function getMinerFromCoinbaseTx(tx) {
 			}
 
 			for (var coinbaseTag in miningPoolsConfig.coinbase_tags) {
-				if (miningPoolsConfig.coinbase_tags.hasOwnProperty(coinbaseTag)) {
+				if (Object.hasOwn(miningPoolsConfig.coinbase_tags, coinbaseTag)) {
 					if (hex2ascii(tx.vin[0].coinbase).indexOf(coinbaseTag) != -1) {
 						var minerInfo = miningPoolsConfig.coinbase_tags[coinbaseTag];
 						minerInfo.identifiedBy = "coinbase tag '" + coinbaseTag + "'";

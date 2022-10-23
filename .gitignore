@@ -59,3 +59,5 @@ typings/
 
 .mongodb
 raptoreumd/.raptoreumcore
+/.idea/
+/package-lock.json

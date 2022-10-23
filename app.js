@@ -123,7 +123,7 @@ function loadMiningPoolConfigs() {
 
 	for (var i = 0; i < global.miningPoolsConfigs.length; i++) {
 		for (var x in global.miningPoolsConfigs[i].payout_addresses) {
-			if (global.miningPoolsConfigs[i].payout_addresses.hasOwnProperty(x)) {
+			if (Object.hasOwn(global.miningPoolsConfigs[i].payout_addresses, x)) {
 				global.specialAddresses[x] = {type:"minerPayout", minerInfo:global.miningPoolsConfigs[i].payout_addresses[x]};
 			}
 		}

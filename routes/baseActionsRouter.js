@@ -240,13 +240,13 @@ router.get("/blocks", function(req, res, next) {
 		var blockHeights = [];
 		if (sort == "desc") {
 			for (var i = (getblockchaininfo.blocks - offset); i > (getblockchaininfo.blocks - offset - limit); i--) {
-				if (i >= 0) {
+				if (i > 0) {
 					blockHeights.push(i);
 				}
 			}
 		} else {
 			for (var i = offset; i < (offset + limit); i++) {
-				if (i >= 0) {
+				if (i > 0) {
 					blockHeights.push(i);
 				}
 			}
@@ -484,7 +484,6 @@ router.get("/tx/:transactionId", function(req, res, next) {
 		promises.push(new Promise(function(resolve, reject) {
 			coreApi.getTxUtxos(rawTxResult).then(function(utxos) {
 				res.locals.utxos = utxos;
-
 				resolve();
 
 			}).catch(function(err) {
@@ -498,7 +497,6 @@ router.get("/tx/:transactionId", function(req, res, next) {
 			promises.push(new Promise(function(resolve, reject) {
 				coreApi.getMempoolTxDetails(txid).then(function(mempoolDetails) {
 					res.locals.mempoolDetails = mempoolDetails;
-
 					resolve();
 
 				}).catch(function(err) {
@@ -510,11 +508,11 @@ router.get("/tx/:transactionId", function(req, res, next) {
 		}
 
 		promises.push(new Promise(function(resolve, reject) {
-			global.rpcClient.command('getblock', rawTxResult.blockhash, function(err3, result3, resHeaders3) {
+			coreApi.getBlockByHash(rawTxResult.blockhash).then(result3 => {
 				res.locals.result.getblock = result3;
 
-				var txids = [];
-				for (var i = 0; i < rawTxResult.vin.length; i++) {
+				let txids = [];
+				for (let i = 0; i < rawTxResult.vin.length; i++) {
 					if (!rawTxResult.vin[i].coinbase) {
 						txids.push(rawTxResult.vin[i].txid);
 					}
@@ -528,6 +526,9 @@ router.get("/tx/:transactionId", function(req, res, next) {
 					res.locals.pageErrors.push(utils.logError("0q83hreuwgd", err));
 					reject(err);
 				});
+			}).catch(err => {
+				res.locals.pageErrors.push(utils.logError("0q83hreuwgd", err));
+				reject(err);
 			});
 		}));
 

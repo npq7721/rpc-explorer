@@ -11,7 +11,7 @@ class Cache {
     } else if(redisCache.active) {
       this.cacheObj = redisCache;
     } else {
-      this.cacheObj = new LRU(maxCacheAmount);
+      this.cacheObj = new LRU({max : Number(maxCacheAmount) });
     }
   }
 

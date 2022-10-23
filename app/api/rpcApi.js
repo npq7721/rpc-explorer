@@ -1,20 +1,20 @@
-var debug = require('debug');
+const debug = require('debug');
 
-var debugLog = debug("btcexp:rpc");
+const debugLog = debug("btcexp:rpc");
 
-var async = require("async");
+const async = require("async");
 
-var utils = require("../utils.js");
-var config = require("../config.js");
-var coins = require("../coins.js");
+const utils = require("../utils.js");
+const config = require("../config.js");
+const coins = require("../coins.js");
 
-var activeQueueTasks = 0;
+let activeQueueTasks = 0;
 
 const HAS_COUNT_MAP = {
 
 }
 
-var rpcQueue = async.queue(function(task, callback) {
+const rpcQueue = async.queue(function(task, callback) {
 	activeQueueTasks++;
 	//debugLog("activeQueueTasks: " + activeQueueTasks);
 
@@ -26,7 +26,6 @@ var rpcQueue = async.queue(function(task, callback) {
 	});
 
 }, config.rpcConcurrency);
-
 
 
 function getBlockchainInfo() {
@@ -819,28 +818,18 @@ function getRpcMethodHelp(methodName) {
 function getRpcData(cmd) {
 	return new Promise(function(resolve, reject) {
 		debugLog(`RPC: ${cmd}`);
-
-		rpcCall = function(callback) {
-			var client = (cmd == "gettxoutsetinfo" ? global.rpcClientNoTimeout : global.rpcClient);
-
-			client.command(cmd, function(err, result, resHeaders) {
-				if (err) {
-					utils.logError("32euofeege", err, {cmd:cmd});
-
-					reject(err);
-
-					callback();
-
-					return;
-				}
-
-				resolve(result);
-
+		let rpcCall = function (callback) {
+			let client = (cmd == "gettxoutsetinfo" ? global.rpcClientNoTimeout : global.rpcClient);
+			client.command(cmd).then(result => {
+				resolve(result)
 				callback();
-			});
+			}).catch(err => {
+				utils.logError("32euofeege", err, {cmd: cmd});
+				reject(err);
+				callback();
+			})
 		};
-
-		rpcQueue.push({rpcCall:rpcCall});
+		rpcQueue.push({rpcCall: rpcCall});
 	});
 }
 
@@ -883,50 +872,43 @@ function getBatchRpcData(requests) {
 	return new Promise(function(resolve, reject) {
 		debugLog(`RPC: ${JSON.stringify(requests)}`);
 
-		rpcCall = function(callback) {
-			global.rpcClient.command(requests, function(err, result, resHeaders) {
-				if (err != null) {
-					utils.logError("38eh39hdee", err, {result:result, headers:resHeaders});
-					reject(err);
-					callback();
-					return;
-				}
-				for(var r of result) {
-					if(r == null || r.code && r.code < 0) {
+		let rpcCall = function (callback) {
+			global.rpcClient.command(requests).then(result => {
+				for (var r of result) {
+					if (r == null || r.code && r.code < 0) {
 						reject(r);
 						callback();
 						return;
 					}
 				}
 				resolve(result);
-
+				callback();
+			}).catch(err => {
+				utils.logError("38eh39hdee", err, {requests : requests});
+				reject(err)
 				callback();
 			});
 		};
-
 		rpcQueue.push({rpcCall:rpcCall});
 	});
 }
 
-function singeRpcCommand(request, callback, resolve, reject, retry = 2) {
-	global.rpcClient.command([request], function(err, result, resHeaders) {
-		if (err != null) {
-			utils.logError("38eh39hdee", err, {result:result, headers:resHeaders});
-			if(retry <= 1) {
-				reject(err);
-				callback();
-			} else {
-				setTimeout(() => {
-					retry--;
-					singeRpcCommand(request, callback, resolve, reject, retry);
-    		}, 10);
-			}
-			return;
-		}
-
+function singleRpcCommand(request, callback, resolve, reject, retry = 2) {
+	global.rpcClient.command([request]).then(result => {
 		resolve(result[0]);
-
 		callback();
+	}).catch(err => {
+		utils.logError("38eh39hdee", err, {request : request});
+		if(retry <= 1) {
+			reject(err);
+			callback();
+		} else {
+			setTimeout(() => {
+				retry--;
+				singleRpcCommand(request, callback, resolve, reject, retry);
+			}, 10);
+		}
+		return;
 	});
 }
 
@@ -934,10 +916,9 @@ function getRpcDataWithParams(request) {
 	return new Promise(function(resolve, reject) {
 		debugLog(`RPC: ${JSON.stringify(request)}`);
 
-		rpcCall = function(callback) {
-			singeRpcCommand(request, callback, resolve, reject);
+		let rpcCall = function (callback) {
+			singleRpcCommand(request, callback, resolve, reject);
 		};
-
 		rpcQueue.push({rpcCall:rpcCall});
 	});
 }

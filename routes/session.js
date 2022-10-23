@@ -150,7 +150,7 @@ class Session {
 					blockHeightsPromises.push(new Promise(function(resolve2, reject2) {
 						coreApi.getBlocksByHash(coinbaseTxBlockHashes).then(function(blocksByHashResult) {
 							for (var txid in blockHashesByTxid) {
-								if (blockHashesByTxid.hasOwnProperty(txid)) {
+								if (Object.hasOwn(blockHashesByTxid, txid)) {
 									result.blockHeightsByTxid[txid] = blocksByHashResult[blockHashesByTxid[txid]].height;
 								}
 							}
