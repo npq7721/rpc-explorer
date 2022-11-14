@@ -70,7 +70,7 @@ class Cache {
     });
   }
   LRUSet(key, obj, maxAge) {
-    this.cacheObj.set(key, obj, maxAge);
+    this.cacheObj.set(key, obj, {ttl : maxAge});
   }
 
   noopGet(key) {
@@ -92,7 +92,11 @@ class Cache {
 
   set(key, obj, maxAge) {
     if(this.cacheObj) {
-      this.cacheObj.set(key, obj, maxAge);
+      if(redisCache.active) {
+        redisCache.set(key, obj, maxAge);
+      } else {
+        this.LRUSet(key, obj, maxAge);
+      }
     }
   }
 }

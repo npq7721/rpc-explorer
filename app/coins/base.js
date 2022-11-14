@@ -174,32 +174,32 @@ class CoinBase {
 		return {
 			base_uri : "/api/",
 			limit : {
-				 windowMs: this.maxRequestsWindow * 60 * 1000, // 15 minutes
-				 max: this.maxRequestsCount, // limit each IP to 100 requests per windowMs
-				 message: `Too calls from this IP within ${this.maxRequestsWindow} min, please try again after ${this.maxRequestsWindow} min. Can't make more then ${this.maxRequestsCount} requests`,
-				 keyGenerator : (req, res) => {
-					 var ip = req.headers['x-forwarded-for'];
-					 if(!ip) {
-						 ip = req.ip;
-					 } else {
-						 console.log("x-forwarded-for ip", ip);
-					 }
-					 return ip;
-				 },
-				 skip : (req, res) => {
-					 var ip = req.headers['x-forwarded-for'];
-					 if(!ip) {
-						 ip = req.ip;
-					 }
-					 var skip = this.unlimittedIps.includes(ip);
-					 if(skip) {
-						 console.log("ip=%s get unlimitted api requests", ip)
-					 } else {
-						 console.log(this.unlimittedIps);
-						 console.log("ip=%s get limitted api requests. %s/%s min ", ip, this.maxRequestsCount, this.maxRequestsWindow)
-					 }
-		        return skip;
-		      }
+				windowMs: this.maxRequestsWindow * 60 * 1000, // 15 minutes
+				max: this.maxRequestsCount, // limit each IP to 100 requests per windowMs
+				message: `Too calls from this IP within ${this.maxRequestsWindow} min, please try again after ${this.maxRequestsWindow} min. Can't make more then ${this.maxRequestsCount} requests`,
+				keyGenerator : (req, res) => {
+					var ip = req.headers['x-forwarded-for'];
+					if(!ip) {
+						ip = req.ip;
+					} else {
+						console.log("x-forwarded-for ip", ip);
+					}
+					return ip;
+				},
+				skip : (req, res) => {
+					var ip = req.headers['x-forwarded-for'];
+					if(!ip) {
+						ip = req.ip;
+					}
+					var skip = this.unlimittedIps.includes(ip);
+					if(skip) {
+						console.log("ip=%s get unlimitted api requests", ip)
+					} else {
+						console.log(this.unlimittedIps);
+						console.log("ip=%s get limitted api requests. %s/%s min ", ip, this.maxRequestsCount, this.maxRequestsWindow)
+					}
+					return skip;
+				}
 			},
 			api_map : [
 				{
@@ -207,6 +207,11 @@ class CoinBase {
 					uri : "getblockcount",
 					api_source : "core",
 					method : "getBlockCount",
+					params : [{
+						name : "nocache",
+						type : "bool",
+						description : "true if get it without cache"
+					}],
 					description : "Get current block height",
 					"return" : "block height as number"
 				},
@@ -217,20 +222,20 @@ class CoinBase {
 					method : "getBlocks",
 					params : [
 						{
-		          name : "start",
-		          type : "number",
-		          description : "Begin row for query result"
-		        },
-	          {
-	            name : "length",
-	            type : "number",
-	            description : "max result for the query"
-	          },
-	          {
-	            name : "search.value",
-	            type: "object",
-	            description : "block height.Specifc height or start-end. Start can be * which mean start from block 0. End can be * which is end at current height."
-	          }
+							name : "start",
+							type : "number",
+							description : "Begin row for query result"
+						},
+						{
+							name : "length",
+							type : "number",
+							description : "max result for the query"
+						},
+						{
+							name : "search.value",
+							type: "object",
+							description : "block height.Specifc height or start-end. Start can be * which mean start from block 0. End can be * which is end at current height."
+						}
 					],
 					description : "Get current block height",
 					"return" : "List of Block information"
@@ -242,15 +247,15 @@ class CoinBase {
 					method : "queryRichList",
 					params : [
 						{
-		          name : "start",
-		          type : "number",
-		          description : "Begin row for query result"
-		        },
-	          {
-	            name : "length",
-	            type : "number",
-	            description : "max result for the query"
-	          }
+							name : "start",
+							type : "number",
+							description : "Begin row for query result"
+						},
+						{
+							name : "length",
+							type : "number",
+							description : "max result for the query"
+						}
 					],
 					description : "Query rich list",
 					"return" : "List of Wallets with balance in descendants order"
@@ -286,7 +291,7 @@ class CoinBase {
 					}],
 					description : "Get block information by height",
 					"return" : "Json Object of block info in following format: " +
-							`<ul><li>{<br>
+						`<ul><li>{<br>
 			  			  &emsp;&emsp;"hash" : "hash",     (string) the block hash (same as provided)<br>
 						  &emsp;&emsp;"confirmations" : n,   (numeric) The number of confirmations, or -1 if the block is not on the main chain<br>
 						  &emsp;&emsp;"size" : n,            (numeric) The block size<br>
@@ -322,7 +327,7 @@ class CoinBase {
 					}],
 					description : "Get raw detail of a transaction",
 					"return" : "Json Object of transaction info in following format: " +
-							`<ul><li>{
+						`<ul><li>{
 							  <br>&emsp;&emsp;"hex" : "data",       (string) The serialized, hex-encoded data for 'txid'
 							  <br>&emsp;&emsp;"txid" : "id",        (string) The transaction id (same as provided)
 							  <br>&emsp;&emsp;"hash" : "id",        (string) The transaction hash (differs from txid for witness transactions)
@@ -377,9 +382,9 @@ class CoinBase {
 					}],
 					description : "Get current balance for specified address",
 					"return" : "Json Object of address balance in following format: " +
-							"<ul><li>{ 'address' : <br>" +
-							"&emsp;{ 'confirmed' : satoshi_amount, <br>" +
-							"&emsp;&nbsp;&nbsp;'unconfirmed' : satoshi_amount }<br>}</li></ul>"
+						"<ul><li>{ 'address' : <br>" +
+						"&emsp;{ 'confirmed' : satoshi_amount, <br>" +
+						"&emsp;&nbsp;&nbsp;'unconfirmed' : satoshi_amount }<br>}</li></ul>"
 				},
 				{
 					name : "getaddressutxos",
@@ -392,14 +397,14 @@ class CoinBase {
 					}],
 					description : "Get list of unspent transactions meta data for specified address",
 					"return" : "Json Object of address utxo in following format: " +
-							"<ul><li>{ 'address' : <br>" +
-							"&emsp;&emsp;[<br>" +
-							"&emsp;&emsp;&nbsp;&nbsp;{ 'tx_hash' : txid, <br>" +
-							"&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;'tx_pos' : index, <br>" +
-							"&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;'height' : block_height, <br>" +
-							"&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;'value' : satoshi_amount }, <br>" +
-							"&emsp;&emsp;... ]<br>" +
-							"}</li></ul>"
+						"<ul><li>{ 'address' : <br>" +
+						"&emsp;&emsp;[<br>" +
+						"&emsp;&emsp;&nbsp;&nbsp;{ 'tx_hash' : txid, <br>" +
+						"&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;'tx_pos' : index, <br>" +
+						"&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;'height' : block_height, <br>" +
+						"&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;'value' : satoshi_amount }, <br>" +
+						"&emsp;&emsp;... ]<br>" +
+						"}</li></ul>"
 				},
 				{
 					name : "getmininginfo",

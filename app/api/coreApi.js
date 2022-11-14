@@ -50,7 +50,10 @@ function getBlockchainInfo() {
 	return miscCache.tryCache("getBlockchainInfo", 10000, rpcApi.getBlockchainInfo);
 }
 
-function getBlockCount() {
+function getBlockCount(req) {
+	if(req && req.query.nocache) {
+		return rpcApi.getBlockCount();
+	}
 	return miscCache.tryCache("getblockcount", 10000, rpcApi.getBlockCount);
 }
 

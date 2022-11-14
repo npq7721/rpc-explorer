@@ -6,9 +6,16 @@ var utils = require("./utils.js");
 
 var redisClient = null;
 if (config.redisUrl) {
-	bluebird.promisifyAll(redis.RedisClient.prototype);
+	//bluebird.promisifyAll(redis.RedisClient.prototype);
 
 	redisClient = redis.createClient({url:config.redisUrl});
+	redisClient.connect().then(() => {
+	}).catch(err => {
+		utils.logError("328rhwefghsdgsdss", err, {})
+	})
+	redisClient.on("error", (err) => {
+		console.error("redis encounter an error ", err);
+	})
 }
 
 function onCacheEvent(cacheType, hitOrMiss, cacheKey) {
@@ -18,7 +25,7 @@ function onCacheEvent(cacheType, hitOrMiss, cacheKey) {
 var redisCache = {
 	get:function(key) {
 		return new Promise(function(resolve, reject) {
-			redisClient.getAsync(key).then(function(result) {
+			redisClient.get(key).then(function(result) {
 				if (result == null) {
 					onCacheEvent("redis", "miss", key);
 
@@ -40,6 +47,11 @@ var redisCache = {
 	},
 	set:function(key, obj, maxAgeMillis) {
 		redisClient.set(key, JSON.stringify(obj), "PX", maxAgeMillis);
+		redisClient.expire(key, maxAgeMillis/1000);
+		// redisCache.set(key, JSON.stringify(obj), {
+		// 	PX : maxAgeMillis,
+		// 	NX : true
+		// })
 	}
 };
 

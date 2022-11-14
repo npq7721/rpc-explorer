@@ -1,172 +1,180 @@
 {
-	"payout_addresses" : {
-      "RHA3Jsuvi7dssBH1vX4uCGEy1V4nzyk4yb" : {
-        "name" : "zellab",
-        "link" : "https://zellabs.net/coins/rtm"
-      },
-      "RRVVdVm2G2Set7mJHRn5xreGDdgqqcRjsh" : {
-        "name" : "Raptoreum Offical Pool",
-        "link" : "https://Raptoreum.com"
-      },
-      "RXvTNWvBHn9LkRCgTwy1c8pKQ9zr9URxTQ" : {
-        "name" : "rpool",
-        "link" : "https://r-pool.net/"
-      },
-      "RSGuBdiLgMHiU47n5F2fjc9sz5YGuTYids" : {
-        "name" : "rplant",
-        "link" : "https://pool.rplant.xyz/"
-      },
-      "RQszdoZyq8fACJ1MXkiZYAiDAhhkt84Y2M" : {
-        "name" : "suprnova",
-        "link" : "https://rtm.suprnova.cc/"
-      },
-			"RJ1LBCQvNiqi5Jc5tA6PME8LiX9fTJpiWd" : {
-				"name" : "Alttank",
-				"link" : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-			},
-			"RGVJXzhuT818ambBPWrKoA5ATEJSc9FKTP" : {
-				"name" : "xpool",
-				"link" : "https://xpoolx.com"
-			},
-			"RYbk69pezJvCxsfwHrmHFbGNFHmsa9ca1E" : {
-				"name" : "poolmine",
-				"link" : "https://poolmine.xyz"
-			},
-			"RYQJfWT3KC7RbnLJasYeakQenDyWdizXhw" : {
-				"name" : "letshash it",
-				"link" : "https://letshash.it/rtm"
-			},
-			"RKs7tDy2eAuXACjSSL7Zfu8gZNQAbRSu4q" : {
-				"name" : "Mining Madness",
-				"link" : "https://miningmadness.com/"
-			},
-			"REZCUP6LPaxudhUHSPnjYuD1FvbkLdrhmv" : {
-				"name" : "Miner World",
-				"link" : "https://miner-world.com/"
-			},
-			"RA5LMTDGQyPNXLUmUTf3NwRa7NtUkaGjc3" : {
-				"name" : "p2pool",
-				"link" : "http://p2pool.co/"
-			},
-			"RLwJL8HmGWxzFHrEbi9557LGHXVG1o17wL" : {
-				"name" : "chialeafpool",
-				"link" : "https://pool.chialeaf.org/"
-			},
-			"RA25EvSDs7YcjQRQte1M8EcLne6XMmziVQ" : {
-				"name" : "011data",
-				"link" : "https://raptorna.011data.com/"
-			},
-			"R9ZM1dbyjTDjGP3geBRy7UHah6dQLMvuMV" : {
-				"name" : "solopools.net",
-				"link" : "https://solopools.net/site/mining"
-			},
-			"RNPnmnLYZvQJMB9qunEEWLaWCxrqzptS3N" : {
-				"name" : "ausminer",
-				"link" : "https://watc.ausminers.com/"
-			},
-			"RC5ApfF99EQ24TWdj5qZAWHZjUdnM7XkK7" : {
-				"name" : "rtm.rocks",
-				"link" : "https://rtm.rocks/"
-			},
-			"RRmfBicumTGj9nFhTiKHvMgRrecu4FLock" : {
-				"name" : "flockpool",
-				"link" : "https://flockpool.com/"
-			},
-			"RFXjMgbKWJBVamHgcn1SghARdptUkFGqYC" : {
-				"name" : "Just4DNS",
-				"link" : "https://pool.just4dns.co.uk/"
-			},
-			"RPrXERDjihW2rrFqBGC5Qe76R5WCPSASmT" : {
-				"name" : "Just4DNS",
-				"link" : "https://pool.just4dns.co.uk/"
-			},
-			"RRizDpZ2pcZuhBEG5JK8c7HNSJyEoFzMNt" : {
-				"name" : "raptoreumemporium",
-				"link" : "https://raptoreumemporium.com/"
-			},
-			"RVUsXAvrBWQdUTnLCqCccnN3wJ3Vt94abo" : {
-				"name" : "bugminer",
-				"link" : "bugminer.org"
-			},
-			"RKrQvnxTowFjv54KDc6bWee292MYvdHRD7" : {
-				"name" : "gpool.me",
-				"link" : "https://gpool.me"
-			},
-			"RB7GTDj8fcac5K6X41r2sKxjEznA5Yy3JW" : {
-				"name" : "coinminerz",
-				"link" : "https://coinminerz.com/raptoreum"
-			},
-			"RGBXP8mLc21vuopDbzhfB3tXnXGyi1omjM" : {
-				"name" : "minersmine",
-				"link" : "https://minersmine.com/site/mining"
-			},
-			"RV8usweXR74GgtoPLvZgN2AQJ1S6FNH62W" : {
-				"name" : "murkapool",
-				"link" : "https://murkapool.it/site/mining"
-			},
-			"RX5HbBn74XKoPJbWjdF134ngqRfFeFYFz1" : {
-				"name" : "aoipool",
-				"link" : "https://aoipool.net/"
-			},
-			"RHm5odk3eenp7TZkizyWH4Cy2HMJQdL76H" : {
-				"name" : "jjpool.eu",
-				"link" : "https://jjpool.eu/"
-			},
-			"RTVPRSvDcM1R8Xqf7Gn6XNNDzRiGkboBCG" : {
-				"name" : "minafacil",
-				"link" : "https://pool.minafacil.com/"
-			},
-			"RUCyaEZxQu3Eure73XPQ57si813RYAMQKC" : {
-				"name" : "moneroocean",
-				"link" : "https://moneroocean.stream/"
-			},
-			"RNhiUcQWbc6nHPvzyXt1aB6j5YSNvgFwNJ" : {
-				"name" : "core-pool",
-				"link" : "https://rtm.core-pool.com/"
-			},
-			"RSucm6pUhmw1Dvk6jZVYGymaDiKVLCuWm7" : {
-				"name" : "raptoreum.online",
-				"link" : "https://raptoreum.online/"
-			},
-			"RMVbHLQAbvmdP5TyFK4A25YLJuVGtf2aCn" : {
-				"name" : "c3pool",
-				"link" : "https://c3pool.com/"
-			},
-			"RFF7XCZsDvnhs879RXpGMaEXEfYZD6anaE" : {
-				"name" : "woolypooly",
-				"link" : "https://woolypooly.com/en/coin/rtm"
-			},
-			"RVaJdHu8sWyN1k9csW3g3CQfMPobdoif5U" : {
-				"name" : "cpu-miners",
-				"link" : "https://cpu-miners.com/"
-			},
-			"RT34wuWszGrKnF8tenwM16cqC26SZqVDnv" : {
-				"name" : "sullypool",
-				"link" : "https://sullypool.com/"
-			},
-			"RFP2mxUWYXQS6jueyQ1wQzLYNCAFdSqpeJ" : {
-				"name" : "darkfibermines",
-				"link" : "https://coins.darkfibermines.com/"
-			},
-			"RBRFq9dLRxgauVXV5FaS4ppQrcQmTAc1h6" : {
-				"name" : "thirdpowerlife",
-				"link" : "https://rtm.thirdpowerlife.com/"
-			},
-			"RFRd27eNoFSCzMn5Nm3sBTYBVVnoc1jk7a" : {
-				"name" : "ravenmine",
-				"link" : "https://pool.ravenmine.co/"
-			},
-			"RUveYpGXR24ZEjtynvgP78jC2dzLqMbWNc" : {
-				"name" : "Mining Madness",
-				"link" : "https://miningmadness.com/"
-			},
-			"RGY1sRzhW7bpoYV7ynCcqsufgApSE7xS7r" : {
-				"name" : "raptoreum.zone",
-				"link" : "https://raptoreum.zone/"
-			}
+  "payout_addresses" : {
+    "RHA3Jsuvi7dssBH1vX4uCGEy1V4nzyk4yb" : {
+      "name" : "zellab",
+      "link" : "https://zellabs.net/coins/rtm"
+    },
+    "RRVVdVm2G2Set7mJHRn5xreGDdgqqcRjsh" : {
+      "name" : "Raptoreum Offical Pool",
+      "link" : "https://Raptoreum.com"
+    },
+    "RXvTNWvBHn9LkRCgTwy1c8pKQ9zr9URxTQ" : {
+      "name" : "rpool",
+      "link" : "https://r-pool.net/"
+    },
+    "RSGuBdiLgMHiU47n5F2fjc9sz5YGuTYids" : {
+      "name" : "rplant",
+      "link" : "https://pool.rplant.xyz/"
+    },
+    "RQszdoZyq8fACJ1MXkiZYAiDAhhkt84Y2M" : {
+      "name" : "suprnova",
+      "link" : "https://rtm.suprnova.cc/"
+    },
+    "RJ1LBCQvNiqi5Jc5tA6PME8LiX9fTJpiWd" : {
+      "name" : "Alttank",
+      "link" : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    "RGVJXzhuT818ambBPWrKoA5ATEJSc9FKTP" : {
+      "name" : "xpool",
+      "link" : "https://xpoolx.com"
+    },
+    "RYbk69pezJvCxsfwHrmHFbGNFHmsa9ca1E" : {
+      "name" : "poolmine",
+      "link" : "https://poolmine.xyz"
+    },
+    "RYQJfWT3KC7RbnLJasYeakQenDyWdizXhw" : {
+      "name" : "letshash it",
+      "link" : "https://letshash.it/rtm"
+    },
+    "RKs7tDy2eAuXACjSSL7Zfu8gZNQAbRSu4q" : {
+      "name" : "Mining Madness",
+      "link" : "https://miningmadness.com/"
+    },
+    "REZCUP6LPaxudhUHSPnjYuD1FvbkLdrhmv" : {
+      "name" : "Miner World",
+      "link" : "https://miner-world.com/"
+    },
+    "RA5LMTDGQyPNXLUmUTf3NwRa7NtUkaGjc3" : {
+      "name" : "p2pool",
+      "link" : "http://p2pool.co/"
+    },
+    "RLwJL8HmGWxzFHrEbi9557LGHXVG1o17wL" : {
+      "name" : "chialeafpool",
+      "link" : "https://pool.chialeaf.org/"
+    },
+    "RA25EvSDs7YcjQRQte1M8EcLne6XMmziVQ" : {
+      "name" : "011data",
+      "link" : "https://raptorna.011data.com/"
+    },
+    "R9ZM1dbyjTDjGP3geBRy7UHah6dQLMvuMV" : {
+      "name" : "solopools.net",
+      "link" : "https://solopools.net/site/mining"
+    },
+    "RNPnmnLYZvQJMB9qunEEWLaWCxrqzptS3N" : {
+      "name" : "ausminer",
+      "link" : "https://watc.ausminers.com/"
+    },
+    "RC5ApfF99EQ24TWdj5qZAWHZjUdnM7XkK7" : {
+      "name" : "rtm.rocks",
+      "link" : "https://rtm.rocks/"
+    },
+    "RRmfBicumTGj9nFhTiKHvMgRrecu4FLock" : {
+      "name" : "flockpool",
+      "link" : "https://flockpool.com/"
+    },
+    "RFXjMgbKWJBVamHgcn1SghARdptUkFGqYC" : {
+      "name" : "Just4DNS",
+      "link" : "https://pool.just4dns.co.uk/"
+    },
+    "RPrXERDjihW2rrFqBGC5Qe76R5WCPSASmT" : {
+      "name" : "Just4Miners",
+      "link" : "https://just4miners.com/#rtm"
+    },
+    "RVkfKC6KArqzSgCWXCVsq3XGRaHbt18ShP" : {
+      "name" : "Just4Miners",
+      "link" : "https://just4miners.com/#rtm"
+    },
+    "RRizDpZ2pcZuhBEG5JK8c7HNSJyEoFzMNt" : {
+      "name" : "raptoreumemporium",
+      "link" : "https://raptoreumemporium.com/"
+    },
+    "RVUsXAvrBWQdUTnLCqCccnN3wJ3Vt94abo" : {
+      "name" : "bugminer",
+      "link" : "bugminer.org"
+    },
+    "RKrQvnxTowFjv54KDc6bWee292MYvdHRD7" : {
+      "name" : "gpool.me",
+      "link" : "https://gpool.me"
+    },
+    "RB7GTDj8fcac5K6X41r2sKxjEznA5Yy3JW" : {
+      "name" : "coinminerz",
+      "link" : "https://coinminerz.com/raptoreum"
+    },
+    "RGBXP8mLc21vuopDbzhfB3tXnXGyi1omjM" : {
+      "name" : "minersmine",
+      "link" : "https://minersmine.com/site/mining"
+    },
+    "RV8usweXR74GgtoPLvZgN2AQJ1S6FNH62W" : {
+      "name" : "murkapool",
+      "link" : "https://murkapool.it/site/mining"
+    },
+    "RX5HbBn74XKoPJbWjdF134ngqRfFeFYFz1" : {
+      "name" : "aoipool",
+      "link" : "https://aoipool.net/"
+    },
+    "RHm5odk3eenp7TZkizyWH4Cy2HMJQdL76H" : {
+      "name" : "jjpool.eu",
+      "link" : "https://jjpool.eu/"
+    },
+    "RTVPRSvDcM1R8Xqf7Gn6XNNDzRiGkboBCG" : {
+      "name" : "minafacil",
+      "link" : "https://pool.minafacil.com/"
+    },
+    "RUCyaEZxQu3Eure73XPQ57si813RYAMQKC" : {
+      "name" : "moneroocean",
+      "link" : "https://moneroocean.stream/"
+    },
+    "RNhiUcQWbc6nHPvzyXt1aB6j5YSNvgFwNJ" : {
+      "name" : "core-pool",
+      "link" : "https://rtm.core-pool.com/"
+    },
+    "RSucm6pUhmw1Dvk6jZVYGymaDiKVLCuWm7" : {
+      "name" : "raptoreum.online",
+      "link" : "https://raptoreum.online/"
+    },
+    "RMVbHLQAbvmdP5TyFK4A25YLJuVGtf2aCn" : {
+      "name" : "c3pool",
+      "link" : "https://c3pool.com/"
+    },
+    "RFF7XCZsDvnhs879RXpGMaEXEfYZD6anaE" : {
+      "name" : "woolypooly",
+      "link" : "https://woolypooly.com/en/coin/rtm"
+    },
+    "RVaJdHu8sWyN1k9csW3g3CQfMPobdoif5U" : {
+      "name" : "cpu-miners",
+      "link" : "https://cpu-miners.com/"
+    },
+    "RT34wuWszGrKnF8tenwM16cqC26SZqVDnv" : {
+      "name" : "sullypool",
+      "link" : "https://sullypool.com/"
+    },
+    "RFP2mxUWYXQS6jueyQ1wQzLYNCAFdSqpeJ" : {
+      "name" : "darkfibermines",
+      "link" : "https://coins.darkfibermines.com/"
+    },
+    "RBRFq9dLRxgauVXV5FaS4ppQrcQmTAc1h6" : {
+      "name" : "thirdpowerlife",
+      "link" : "https://rtm.thirdpowerlife.com/"
+    },
+    "RFRd27eNoFSCzMn5Nm3sBTYBVVnoc1jk7a" : {
+      "name" : "ravenmine",
+      "link" : "https://pool.ravenmine.co/"
+    },
+    "RUveYpGXR24ZEjtynvgP78jC2dzLqMbWNc" : {
+      "name" : "Mining Madness",
+      "link" : "https://miningmadness.com/"
+    },
+    "RGY1sRzhW7bpoYV7ynCcqsufgApSE7xS7r" : {
+      "name" : "raptoreum.zone",
+      "link" : "https://raptoreum.zone/"
+    },
+    "RBDFm7B4yxFU9hMx8QWW8xF95nD2Rrdrw8" : {
+      "name" : " friendspool",
+      "link" : "http://ergo.friendspool.net/pool/rtm1"
+    }
   },
 
-	"coinbase_tags": {
+  "coinbase_tags": {
     "BITFARMS": {
       "name": "Bitfarms",
       "link": "https://www.bitarms.io/"
@@ -675,9 +683,9 @@
       "name": "Tangpool",
       "link": "http://www.tangpool.com/"
     },
-		"pool.rplant.xyz" : {
-			"name" : "rplant",
-			"link" : "https://pool.rplant.xyz/"
-		}
+    "pool.rplant.xyz" : {
+      "name" : "rplant",
+      "link" : "https://pool.rplant.xyz/"
+    }
   }
 }
