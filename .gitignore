@@ -61,3 +61,4 @@ typings/
 raptoreumd/.raptoreumcore
 /.idea/
 /package-lock.json
+/.env-testnet
