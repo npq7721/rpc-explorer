@@ -22,7 +22,7 @@ services:
       exp:
         ipv4_address: 172.21.0.3
     env_file:
-      - .env-testnet
+      - .env
     ports:
       - 80:8888
 
