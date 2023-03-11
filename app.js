@@ -208,7 +208,7 @@ app.continueStartup = function() {
 	};
 
 	global.rpcClient = new bitcoinCore(rpcClientProperties);
-
+	global.rpcClient.display_host = rpcCred.display_host;
 	var rpcClientNoTimeoutProperties = {
 		host: rpcCred.host,
 		port: rpcCred.port,
@@ -226,13 +226,6 @@ app.continueStartup = function() {
 	// });
 	// btcEventListener.listen();
 
-	var mongoDBConfig = {
-		address : process.env.DB_URL,
-		port : process.env.DB_PORT,
-		user : process.env.DB_USERNAME,
-		password: process.env.DB_PASSWORD,
-		database : process.env.DB_DATABASE
-	}
 	// global.blockchainSync = new BlockchainSync(mongoDBConfig);
 	// global.blockchainSync.syncAddressBalance().then(result => {
 	// 	console.log("addresss balance ", result);

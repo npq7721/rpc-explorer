@@ -8,6 +8,7 @@ var btcAuth = btcUri.auth ? btcUri.auth.split(':') : [];
 module.exports = {
 	rpc: {
 		host: btcUri.hostname || process.env.BTCEXP_BITCOIND_HOST || "127.0.0.1",
+		display_host : process.env.BTCEXP_BITCOIND_HOST_DISPLAY || "127.0.0.1",
 		port: btcUri.port || process.env.BTCEXP_BITCOIND_PORT || 8332,
 		username: btcAuth[0] || process.env.BTCEXP_BITCOIND_USER,
 		password: btcAuth[1] || process.env.BTCEXP_BITCOIND_PASS,
