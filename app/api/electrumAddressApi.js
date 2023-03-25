@@ -245,18 +245,18 @@ function getAddressBalance(addrScripthash, scriptPubkey) {
 			debugLog(`getAddressBalance=${JSON.stringify(results)}`);
 
 			if (addrScripthash == coinConfig.genesisCoinbaseOutputAddressScripthash) {
-				for (var i = 0; i < results.length; i++) {
-					var coinbaseBlockReward = coinConfig.blockRewardFunction(0);
+				for (let i = 0; i < results.length; i++) {
+					let coinbaseBlockReward = coinConfig.blockRewardFunction(0);
 					
 					results[i].result.confirmed += (coinbaseBlockReward * coinConfig.baseCurrencyUnit.multiplier);
 				}
 			}
 
-			var first = results[0];
-			var done = false;
+			let first = results[0];
+			let done = false;
 
-			for (var i = 1; i < results.length; i++) {
-				if (results[i].confirmed != first.confirmed) {
+			for (let i = 1; i < results.length; i++) {
+				if (results[i].result.confirmed != first.result.confirmed) {
 					resolve({conflictedResults:results});
 
 					done = true;
@@ -264,7 +264,13 @@ function getAddressBalance(addrScripthash, scriptPubkey) {
 			}
 
 			if (!done) {
-				resolve(results[0]);
+				let rtn = {
+					balance: first.result.confirmed,
+					balance_immature: 0,
+					balance_spendable: 0,
+					received: 0
+				};
+				resolve(rtn);
 			}
 		}).catch(function(err) {
 			reject(err);

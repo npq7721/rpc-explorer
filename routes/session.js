@@ -12,6 +12,7 @@ const sha256 = require("crypto-js/sha256");
 const hexEnc = require("crypto-js/enc-hex");
 const qrcode = require('qrcode');
 const Decimal = require("decimal.js");
+const config = require("../app/config");
 const htmlViewCache = new Cache(100);
 class Session {
 	constructor(req, res, next, config) {
@@ -382,7 +383,7 @@ class Session {
 					addrScripthash = addrScripthash.match(/.{2}/g).reverse().join("");
 
 					result.electrumScripthash = addrScripthash;
-					addressApi.getAddressBalance(address, addrScripthash).then(balData => {
+					addressApi.getAddressBalance(address, config.addressApi === "daemonRPC" ? null : validateaddressResult.scriptPubKey).then(balData => {
 						result.addressDetails = {};
 						if(balData.length) {
 							result.addressDetails.assets = {};
