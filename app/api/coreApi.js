@@ -1,26 +1,27 @@
-var debug = require("debug");
+const debug = require("debug");
 
-var debugLog = debug("btcexp:core");
-var fs = require('fs');
+const debugLog = debug("btcexp:core");
+const fs = require('fs');
 
-var utils = require("../utils.js");
-var config = require("../config.js");
-var coins = require("../coins.js");
-var redisCache = require("../redisCache.js");
-var Cache = require("./../cache.js");
-var Decimal = require("decimal.js");
-var crypto = require('crypto');
-var sha256 = crypto.createHash('sha256');
+const utils = require("../utils.js");
+const config = require("../config.js");
+const coins = require("../coins.js");
+const redisCache = require("../redisCache.js");
+const Cache = require("./../cache.js");
+const Decimal = require("decimal.js");
+const crypto = require('crypto');
+const sha256 = crypto.createHash('sha256');
 
 // choose one of the below: RPC to a node, or mock data while testing
-var rpcApi = require("./rpcApi.js");
+const rpcApi = require("./rpcApi.js");
+const addressApi = require("./addressApi.js");
 //var rpcApi = require("./mockApi.js")
-var miscCache = new Cache(process.env.MAX_MISC_CACHE ? process.env.MAX_MISC_CACHE : 100);
-var blockCache = new Cache(process.env.MAX_BLOCK_CACHE ? process.env.MAX_BLOCK_CACHE : 50);
-var txCache = new Cache(process.env.MAX_TX_CACHE ? process.env.MAX_TX_CACHE : 200);
-var assetsCache =  new Cache(process.env.MAX_ASSET_CACHE ? process.env.MAX_ASSET_CACHE : 100);
-var masternodeCache =  new Cache(process.env.MAX_MASTERNODE_CACHE ? process.env.MAX_MASTERNODE_CACHE : 100);
-var chartingCache =  new Cache(process.env.MAX_CHART_CACHE ? process.env.MAX_CHART_CACHE : 1200);
+const miscCache = new Cache(process.env.MAX_MISC_CACHE ? process.env.MAX_MISC_CACHE : 100);
+const blockCache = new Cache(process.env.MAX_BLOCK_CACHE ? process.env.MAX_BLOCK_CACHE : 50);
+const txCache = new Cache(process.env.MAX_TX_CACHE ? process.env.MAX_TX_CACHE : 200);
+const assetsCache =  new Cache(process.env.MAX_ASSET_CACHE ? process.env.MAX_ASSET_CACHE : 100);
+const masternodeCache =  new Cache(process.env.MAX_MASTERNODE_CACHE ? process.env.MAX_MASTERNODE_CACHE : 100);
+const chartingCache =  new Cache(process.env.MAX_CHART_CACHE ? process.env.MAX_CHART_CACHE : 1200);
 
 function getGenesisBlockHash() {
 	return coins[config.coin].genesisBlockHash;
@@ -154,16 +155,19 @@ function getAddressDetails(address, scriptPubkey, sort, limit, offset, assetName
 
 function getAddressDeltas(address, scriptPubkey, sort, limit, offset, start, numBlock, assetName) {
 	//for now address deltas rpc does not do paging so there isn't a need to use limit and offset as cache key
-
 	return miscCache.tryCache(`getAddressDeltas-${address}-${assetName}-${sort}-${limit}-${offset}-${start}-${numBlock}`, 300000, function() {
 		return new Promise((resolve, reject) => {
 			miscCache.tryCache(`getAddressDeltas-${address}-${assetName}--${start}-${numBlock}`, 100000, function() {
-				return rpcApi.getAddressDeltas(address, scriptPubkey, sort, limit, offset, start, numBlock, assetName);
+				return addressApi.getAddressDeltas(address, scriptPubkey, sort, limit, offset, start, numBlock, assetName);
 			}).then(addressDeltas => {
-				var txids = {};
-				var uniqueDelta = [];
-				for (var index in addressDeltas) {
-					var txid = addressDeltas[index].txid;
+				if(addressDeltas.result) {
+					addressDeltas = addressDeltas.result;
+				}
+				let txids = {};
+				let uniqueDelta = [];
+				for (let index in addressDeltas) {
+					let txid = addressDeltas[index].txid ? addressDeltas[index].txid : addressDeltas[index].tx_hash;
+					addressDeltas[index].txid = txid;
 					if(!txids[txid]) {
 						txids[txid] = 1;
 						uniqueDelta.push(addressDeltas[index]);
@@ -173,8 +177,8 @@ function getAddressDeltas(address, scriptPubkey, sort, limit, offset, start, num
 				if (sort == "desc") {
 					addressDeltas.reverse();
 				}
-				var end = Math.min(addressDeltas.length, limit + offset);
-				var result = {
+				let end = Math.min(addressDeltas.length, limit + offset);
+				let result = {
 					txCount : addressDeltas.length,
 					txids : [],
 					blockHeightsByTxid : {}

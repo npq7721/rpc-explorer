@@ -36,6 +36,7 @@ const METHOD_MAPPING = {
 	},
 	addressDeltas : {
 		"daemonRPC" : rpcApi.getAddressDeltas,
+		"electrumx" : electrumAddressApi.getAddressTxids
 	}
 }
 

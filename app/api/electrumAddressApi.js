@@ -162,7 +162,10 @@ function getAddressDetails(address, scriptPubkey, sort, limit, offset) {
 	});
 }
 
-function getAddressTxids(addrScripthash) {
+function getAddressTxids(addrScripthash, scriptPubkey) {
+	if(!addrScripthash) {
+		addrScripthash = getAddressScriptHash(scriptPubkey);
+	}
 	return new Promise(function(resolve, reject) {
 		runOnAllServers(function(electrumClient) {
 			return electrumClient.blockchainScripthash_getHistory(addrScripthash);
@@ -186,7 +189,6 @@ function getAddressTxids(addrScripthash) {
 					done = true;
 				}
 			}
-
 			if (!done) {
 				resolve(results[0]);
 			}
@@ -239,7 +241,7 @@ function getAddressBalance(addrScripthash, scriptPubkey) {
 	}
 	return new Promise(function(resolve, reject) {
 		runOnAllServers(function(electrumClient) {
-			return electrumClient.blockchainScripthash_getBalance(addrScripthash);
+ 			return electrumClient.blockchainScripthash_getBalance(addrScripthash);
 
 		}).then(function(results) {
 			debugLog(`getAddressBalance=${JSON.stringify(results)}`);
@@ -278,9 +280,24 @@ function getAddressBalance(addrScripthash, scriptPubkey) {
 	});
 }
 
+function getAddressDeltas(addrScripthash, scriptPubkey, sort, limit, offset, start, numBlock, assetName) {
+	if(!addrScripthash) {
+		addrScripthash = getAddressScriptHash(scriptPubkey);
+	}
+	return new Promise((resolve, reject) => {
+		runOnAllServers(function(electrumClient) {
+			return electrumClient.blockchainScripthash_getHistory(addrScripthash);
+
+		}).then(function(results) {
+
+		}).catch(reject);
+	})
+}
+
 module.exports = {
 	connectToServers: connectToServers,
 	getAddressDetails: getAddressDetails,
 	getAddressBalance : getAddressBalance,
-	getAddressUTXOs : getAddressUTXOs
+	getAddressUTXOs : getAddressUTXOs,
+	getAddressTxids : getAddressTxids
 };

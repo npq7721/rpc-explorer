@@ -42,11 +42,12 @@ div(class="row monospace")
 										span(class="rounded bg-primary text-white px-2 py-1 mr-2") coinbase
 										span Newly minted coins
 									else
-										if (vout && vout.scriptPubKey && vout.scriptPubKey.addresses)
+										if (vout && vout.scriptPubKey && (vout.scriptPubKey.addresses || vout.scriptPubKey.address))
+											- var address = vout.scriptPubKey.addresses ? vout.scriptPubKey.addresses[0] : vout.scriptPubKey.address
 											div(class="word-wrap")
-												a(href=("/address/" + vout.scriptPubKey.addresses[0]), class=(txIOHighlightAddress == vout.scriptPubKey.addresses[0] ? "font-weight-bold" : null)) #{vout.scriptPubKey.addresses[0]}
-												if (global.specialAddresses[vout.scriptPubKey.addresses[0]])
-													- var specialAddressInfo = global.specialAddresses[vout.scriptPubKey.addresses[0]];
+												a(href=("/address/" + address), class=(txIOHighlightAddress == address ? "font-weight-bold" : null)) #{address}
+												if (global.specialAddresses[address])
+													- var specialAddressInfo = global.specialAddresses[address];
 													if (specialAddressInfo.type == "minerPayout")
 														span
 														a(data-toggle="tooltip", title=("Miner payout address: " + specialAddressInfo.minerInfo.name))
@@ -118,7 +119,7 @@ div(class="row monospace")
 		- var hiddenRowCount = 0;
 		each vout, voutIndex in tx.vout
 			- var highlightRow = false;
-			if (txIOHighlightAddress != null && vout.scriptPubKey && vout.scriptPubKey.addresses && vout.scriptPubKey.addresses[0] == txIOHighlightAddress)
+			if (txIOHighlightAddress != null && vout.scriptPubKey && vout.scriptPubKey.addresses && (vout.scriptPubKey.addresses[0] == txIOHighlightAddress || out.scriptPubKey.address == txIOHighlightAddress))
 				- highlightRow = true;
 
 			if (!highlightRow)
@@ -143,7 +144,8 @@ div(class="row monospace")
 						div(class=("row pr-3"))
 							div(class="tx-io-desc")
 								if (vout.scriptPubKey)
-									if (vout.scriptPubKey.addresses)
+									- var address = vout.scriptPubKey.addresses ? vout.scriptPubKey.addresses[0] : vout.scriptPubKey.address
+									if (address)
 										if (false)
 											if (vout.scriptPubKey.type == "pubkey")
 												span(class="border border-secondary rounded bg-light px-2 py-1 mr-2") P2PK
@@ -154,11 +156,11 @@ div(class="row monospace")
 											else if (vout.scriptPubKey.type == "witness_v0_keyhash")
 												span(class="border border-secondary rounded bg-light px-2 py-1 mr-2") V0_P2WPKH
 
-										a(id=("output-" + voutIndex), href=("/address/" + vout.scriptPubKey.addresses[0]))
-											span(class=("monospace word-wrap " + (highlightRow ? "font-weight-bold" : ""))) #{vout.scriptPubKey.addresses[0]}
+										a(id=("output-" + voutIndex), href=("/address/" + address))
+											span(class=("monospace word-wrap " + (highlightRow ? "font-weight-bold" : ""))) #{address}
 
-										if (global.specialAddresses[vout.scriptPubKey.addresses[0]])
-											- var specialAddressInfo = global.specialAddresses[vout.scriptPubKey.addresses[0]];
+										if (global.specialAddresses[address])
+											- var specialAddressInfo = global.specialAddresses[address];
 											if (specialAddressInfo.type == "minerPayout")
 												span
 												a(data-toggle="tooltip", title=("Miner payout address: " + specialAddressInfo.minerInfo.name))

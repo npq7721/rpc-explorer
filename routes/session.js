@@ -355,6 +355,9 @@ class Session {
 			}
 			self.res.locals.numBlocks = 10000;
 			self.res.locals.startBlock = currentBlock ? currentBlock - self.res.locals.numBlocks + 1 : 0;
+			if(self.res.locals.startBlock < 0) {
+				self.res.locals.startBlock = 1;
+			}
 			qrcode.toDataURL(this.res.locals.address, function(err, url) {
 				if (err) {
 					self.res.locals.pageErrors.push(utils.logError("93ygfew0ygf2gf2", err));
