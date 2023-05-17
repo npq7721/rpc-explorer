@@ -247,7 +247,7 @@ class Session {
 					var addrScripthash = hexEnc.stringify(sha256(hexEnc.parse(validateaddressResult.scriptPubKey)));
 					addrScripthash = addrScripthash.match(/.{2}/g).reverse().join("");
 					result.electrumScripthash = addrScripthash;
-					coreApi.getAddressDeltas(address, validateaddressResult.scriptPubKey, result.sort,
+					addressApi.getAddressDeltas(address, validateaddressResult.scriptPubKey, result.sort,
 																			result.limit, result.offset, result.startBlock, result.numBlocks, assetName).then(addressResult => {
 						var addressDetails = addressResult.addressDeltas;
 						if (addressResult.errors) {

@@ -31,6 +31,8 @@ var csurf = require("csurf");
 var config = require("./app/config.js");
 var simpleGit = require('simple-git');
 var utils = require("./app/utils.js");
+var pingUtils = require("./app/pingUtils.js");
+
 var moment = require("moment");
 var Decimal = require('decimal.js');
 var bitcoinCore = require("bitcoin-core");
@@ -235,7 +237,7 @@ app.continueStartup = function() {
 	//});
 
 	if(global.coinConfig.masternodeSupported) {
-		utils.scheduleCheckIps();
+		pingUtils.scheduleCheckIps();
 	}
 
 	coreApi.getNetworkInfo().then(function(getnetworkinfo) {

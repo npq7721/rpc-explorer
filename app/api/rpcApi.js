@@ -5,6 +5,7 @@ const debugLog = debug("btcexp:rpc");
 const async = require("async");
 
 const utils = require("../utils.js");
+const pingUtils = require("../pingUtils.js");
 const config = require("../config.js");
 const coins = require("../coins.js");
 
@@ -341,7 +342,7 @@ function getRawMempoolEntry(txid) {
 	});
 }
 
-function getChainTxStats(blockCount) {
+function getChainTxStats (blockCount) {
 	return getRpcDataWithParams({method:"getchaintxstats", parameters:[blockCount]});
 }
 
@@ -687,15 +688,15 @@ function getMasternodeReachableCount() {
 	var self = this;
 	return new Promise((resolve, reject) => {
 		masternode("list", global.coinConfig.masternodeCommand).then(async mnList => {
-			utils.clearIpList();
+			pingUtils.clearIpList();
 			for(var tx in mnList) {
 				var mn = mnList[tx];
 				if(mn.status === "ENABLED") {
 					var ipPort = mn.address.split(':');
-					var isReachable = await utils.isIpPortReachableFromCache(ipPort[0], ipPort[1]);
+					var isReachable = await pingUtils.isIpPortReachableFromCache(ipPort[0], ipPort[1]);
 				}
 			}
-			var checkResult = await utils.checkIpsAsync();
+			var checkResult = await pingUtils.checkIpsAsync();
 			resolve(checkResult);
 		}).catch(reject);
 	});
@@ -942,7 +943,7 @@ module.exports = {
 	getRpcMethodHelp: getRpcMethodHelp,
 	getAddress: getAddress,
 	getPeerInfo: getPeerInfo,
-	getChainTxStats: getChainTxStats,
+	getChainTxStats : getChainTxStats,
 	getBlockCount : getBlockCount,
 	getBlock : getBlock,
 	getSupply : getSupply,

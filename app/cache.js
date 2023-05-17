@@ -21,7 +21,7 @@ class Cache {
         return true;
       };
     }*/
-    var self = this;
+    let self = this;
     return new Promise(function(resolve, reject) {
       const finallyFunc = function() {
         dataFunc().then(function(result) {
@@ -36,7 +36,7 @@ class Cache {
           reject(err);
         });
       };
-      self.get(cacheKey).then(function(result) {
+      self.get(cacheKey, cacheMaxAge, dataFunc).then(function(result) {
         if(!result) {
           finallyFunc();
         } else {
@@ -79,10 +79,10 @@ class Cache {
     });
   }
 
-  get(key) {
+  get(key, cacheMaxAge, dataFunc) {
     if(this.cacheObj) {
       if(redisCache.active) {
-        return redisCache.get(key);
+        return redisCache.get(key, cacheMaxAge, dataFunc);
       }
       return this.LRUGet(key);
     } else {

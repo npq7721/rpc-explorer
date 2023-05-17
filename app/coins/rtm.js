@@ -1,8 +1,8 @@
-var Decimal = require("decimal.js");
+let Decimal = require("decimal.js");
 Decimal8 = Decimal.clone({ precision:8, rounding:8 });
-var MasternodeBase = require("./masternodeBase.js");
+let MasternodeBase = require("./masternodeBase.js");
 
-var Raptoreum = new MasternodeBase("Raptoreum", "RTM", "raptoreum", ["sat", "satoshi"], "smartnode");
+let Raptoreum = new MasternodeBase("Raptoreum", "RTM", "raptoreum", ["sat", "satoshi"], "smartnode");
 Raptoreum.addProperties({
 	logoUrl:"/img/logo/rtm.svg",
 	siteTitle:"Raptoreum Explorer",
@@ -92,33 +92,34 @@ Raptoreum.addProperties({
 
 	blockRewardFunction:function(blockHeight) {
 		blockHeight = Number(blockHeight);
-		var nSubsidy = 5000; // (declaring the reward variable and its original/default amount)
-		var owlings = 21262; // amount of blocks between 2 owlings
-		var multiplier; // integer number of owlings
-		var tempHeight; // number of blocks since last anchor
+		blockHeight -= 1;
+		let nSubsidy = 5000; // (declaring the reward variable and its original/default amount)
+		let owlings = 21262; // amount of blocks between 2 owlings
+		let multiplier; // integer number of owlings
+		let tempHeight; // number of blocks since last anchor
 		if (blockHeight < 720) {
 			nSubsidy = 4;
 		} else if ( (blockHeight > 553531) && (blockHeight < 2105657) ){
 			tempHeight = blockHeight - 553532;
-			multiplier = tempHeight / owlings;
+			multiplier = Math.floor(tempHeight / owlings);
 			nSubsidy -= (multiplier*10 +10);
 		} else if ( (blockHeight > 2105657) && (blockHeight < 5273695) ) {
 			tempHeight = blockHeight - 2105658;
-			multiplier = tempHeight / owlings;
+			multiplier = Math.floor((tempHeight / owlings));
 			nSubsidy -= (multiplier*20 + 750);
 		} else if ( (blockHeight > 5273695) && (blockHeight < 7378633) ) {
 			tempHeight = blockHeight - 5273696;
-			multiplier = tempHeight / owlings;
+			multiplier = Math.floor(tempHeight / owlings);
 			nSubsidy -= (multiplier*10 + 3720);
 		} else if ( (blockHeight > 7378633) && (blockHeight < 8399209) ){
 			tempHeight = blockHeight - 7378634;
-			multiplier = tempHeight / owlings;
+			multiplier = Math.floor((tempHeight / owlings));
 			nSubsidy -= (multiplier * 5 + 4705);
 		} else if ( (blockHeight > 8399209) && (blockHeight < 14735285) ){
 			nSubsidy = 55;
 		} else if ( (blockHeight > 14735285) && (blockHeight < 15798385) ){
 		   tempHeight = blockHeight - 14735286;
-		   multiplier = tempHeight / owlings;
+		   multiplier = Math.floor(tempHeight / owlings);
 		   nSubsidy -= (multiplier + 4946);
 		} else if ( (blockHeight > 15798385) && (blockHeight < 25844304) ){
 			nSubsidy = 5;

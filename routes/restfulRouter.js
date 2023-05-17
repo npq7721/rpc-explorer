@@ -4,6 +4,7 @@ const MarketAPI = require("./../app/api/MarketApi.js");
 //var sha256 = require("crypto-js/sha256");
 //var hexEnc = require("crypto-js/enc-hex");
 const utils = require('./../app/utils.js');
+const pingUtils = require('./../app/pingUtils.js');
 const PageRender = require('./../app/pageRender.js');
 const coins = require("./../app/coins.js");
 const config = require("./../app/config.js");
@@ -552,7 +553,7 @@ class RestfulRouter {
 					return second.Reachable.toLocaleString().localeCompare(first.Reachable.toLocaleString());
 				});
 				result.recordsFiltered = result.recordsTotal;
-				utils.checkIps();
+				pingUtils.checkIps();
 				resolve(result.data);
 			}).catch(reject);
 		});

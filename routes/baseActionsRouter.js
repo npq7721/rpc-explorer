@@ -15,6 +15,7 @@ var Decimal = require("decimal.js");
 var marked = require("marked");
 
 var utils = require('./../app/utils.js');
+var pingUtils = require('./../app/pingUtils.js');
 var coins = require("./../app/coins.js");
 var config = require("./../app/config.js");
 var coreApi = require("./../app/api/coreApi.js");
@@ -129,7 +130,7 @@ router.get("/peers", function(req, res, next) {
 		}
 
 		if (peerIps.length > 0) {
-			utils.geoLocateIpAddresses(peerIps).then(function(results) {
+			pingUtils.geoLocateIpAddresses(peerIps).then(function(results) {
 				res.locals.peerIpSummary = results;
 
 				res.render("peers");

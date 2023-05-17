@@ -119,7 +119,7 @@ div(class="row monospace")
 		- var hiddenRowCount = 0;
 		each vout, voutIndex in tx.vout
 			- var highlightRow = false;
-			if (txIOHighlightAddress != null && vout.scriptPubKey && vout.scriptPubKey.addresses && (vout.scriptPubKey.addresses[0] == txIOHighlightAddress || out.scriptPubKey.address == txIOHighlightAddress))
+			if (txIOHighlightAddress != null && vout.scriptPubKey && vout.scriptPubKey.addresses && (vout.scriptPubKey.addresses[0] == txIOHighlightAddress || vout.scriptPubKey.address == txIOHighlightAddress))
 				- highlightRow = true;
 
 			if (!highlightRow)
