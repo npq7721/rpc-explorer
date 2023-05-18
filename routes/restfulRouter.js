@@ -529,7 +529,7 @@ class RestfulRouter {
 					//console.log(mn);
 					result.recordsTotal++;
 					var ipPort = mn.address.split(':');
-					var isReachable = await utils.isIpPortReachableFromCache(ipPort[0], ipPort[1]);
+					var isReachable = await pingUtils.isIpPortReachableFromCache(ipPort[0], ipPort[1]);
 					var reachableStatus;
 					if(isReachable === "Not Cached") {
 						reachableStatus = "Checking"
