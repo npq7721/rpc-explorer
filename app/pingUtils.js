@@ -151,7 +151,6 @@ function checkIpsAsync() {
         const checkCount = {count : 0, reachable: 0};
         checkIps(checkCount);
         const job = schedule.scheduleJob("0/1 * * * *", () => {
-            console.log("checkCount.count ", checkCount.count);
             if(checkCount.count >= Object.keys(ipList).length) {
                 resolve(`${checkCount.reachable}/${checkCount.count}`);
                 job.cancel();

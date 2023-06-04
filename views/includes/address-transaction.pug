@@ -124,12 +124,10 @@ div(class="card mb-3 shadow-sm")
                     include value-display.pug
 
           div(class="card-body")
-            if (true)
-              - var txInputs = txInputsByTransaction[tx.txid];
-              - var blockHeight = blockHeightsByTxid[tx.txid];
-              - var txIOHighlightAddress = address;
+            - var blockHeight = blockHeightsByTxid[tx.txid];
+            - var txIOHighlightAddress = address;
 
-              include transaction-io-details.pug
+            include transaction-io-details.pug
 
     else
       p Since this explorer is database-free, it doesn't natively support address transaction history. However, you can configure it to communicate with one or more ElectrumX servers to build and display this data. In doing so, you should be aware that you'll be trusting those ElectrumX servers. If you configure multiple servers the results obtained from each will be cross-referenced against the others. Communicating with ElectrumX servers will also impact your privacy since the servers will know what addresses you're interested in. If these tradeoffs are acceptable, you can see a list of public ElectrumX servers here:

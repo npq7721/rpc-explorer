@@ -41,7 +41,7 @@ let redisCache = {
 				}
 				let expirationTime = await redisClient.get(key + expirationKey);
 				let isExpired = !expirationTime || Number(expirationTime) <= Date.now()
-				//console.log("%s is expired , %s, %s", key, isExpired, expirationTime, Date.now());
+				//	console.log("%s is expired , %s, %s %O", key, isExpired, expirationTime, Date.now(), dataFunc);
 				if(!isExpired) {
 					if(cacheValue) {
 						return resolve(cacheValue)
@@ -49,15 +49,15 @@ let redisCache = {
 				} else if(cacheValue) {
 					if(dataFunc) {
 						let pendingKey = key + pendingCallPostfix;
-						let isPendingCall = redisClient.get(pendingKey);
+						let isPendingCall = await redisClient.get(pendingKey);
 						if(!isPendingCall) {
-							redisClient.set(pendingKey, true)
+							redisClient.set(pendingKey, "true")
 							dataFunc().then(value => {
 								self.set(key, value, maxAgeMillis);
-								redisClient.set(pendingKey, false)
+								redisClient.del(pendingKey)
 							}).catch(err => {
 								console.error(err);
-								redisClient.set(pendingKey, false)
+								redisClient.del(pendingKey)
 							})
 						}
 					} else {
@@ -101,7 +101,7 @@ let redisCache = {
 			//console.log("cache: %s=%s %s", key, obj, expirationTimeInMs);
 			redisClient.set(expKey, expirationTimeInMs);
 
-			let age = (maxAgeMillis / 1000) + 300;
+			let age = (maxAgeMillis / 1000) + 90;
 			redisClient.expire(key, age);
 			redisClient.expire(expKey, age)
 		}

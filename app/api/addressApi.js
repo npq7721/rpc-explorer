@@ -93,7 +93,6 @@ function executeMethod(method, useFrom, ...args) {
 			//	console.log("%s - %O", func, args);
 				promises.push(func.apply(null, args));
 			} else {
-				console.log(funcMap);
 				promises.push(new Promise(function(resolve, reject) {
 					result = {};
 					result[method] = null;

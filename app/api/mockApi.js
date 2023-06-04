@@ -68,7 +68,6 @@ function getBlockByHeight(blockHeight) {
 }
 
 function getBlocksByHeight(blockHeights) {
-	console.log("mock.getBlocksByHeight: " + blockHeights);
 	return new Promise(function(resolve, reject) {
 		var blocks = [];
 		for (var i = 0; i < blockHeights.length; i++) {

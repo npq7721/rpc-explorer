@@ -115,22 +115,20 @@ class Session {
 		}
 	}
 	getTransactionsDetail(txids, assetName) {
-		var self = this;
-		var result = this.res.locals;
+		let self = this;
+		let result = this.res.locals;
 		return new Promise(function(resolve, reject) {
 			result = Object.assign(result, {
 				transactions : [],
-				txInputsByTransaction : null,
 				blockHeightsByTxid : {},
 			});
 			coreApi.getRawTransactionsWithInputs(txids, 10).then(function(rawTxResult) {
 				result.transactions = rawTxResult.transactions;
-				result.txInputsByTransaction = rawTxResult.txInputsByTransaction;
 				// for coinbase txs, we need the block height in order to calculate subsidy to display
-				var coinbaseTxs = [];
-				for (var i = 0; i < rawTxResult.transactions.length; i++) {
-					var tx = rawTxResult.transactions[i];
-					for (var j = 0; j < tx.vin.length; j++) {
+				let coinbaseTxs = [];
+				for (let i = 0; i < rawTxResult.transactions.length; i++) {
+					let tx = rawTxResult.transactions[i];
+					for (let j = 0; j < tx.vin.length; j++) {
 						if (tx.vin[j].coinbase) {
 							// addressApi sometimes has blockHeightByTxid already available, otherwise we need to query for it
 							if (!result.blockHeightsByTxid[tx.txid]) {
@@ -139,18 +137,18 @@ class Session {
 						}
 					}
 				}
-				var coinbaseTxBlockHashes = [];
-				var blockHashesByTxid = {};
+				let coinbaseTxBlockHashes = [];
+				let blockHashesByTxid = {};
 				coinbaseTxs.forEach(function(tx) {
 					coinbaseTxBlockHashes.push(tx.blockhash);
 					blockHashesByTxid[tx.txid] = tx.blockhash;
 				});
-				var blockHeightsPromises = [];
+				let blockHeightsPromises = [];
 				if (coinbaseTxs.length > 0) {
 					// we need to query some blockHeights by hash for some coinbase txs
 					blockHeightsPromises.push(new Promise(function(resolve2, reject2) {
 						coreApi.getBlocksByHash(coinbaseTxBlockHashes).then(function(blocksByHashResult) {
-							for (var txid in blockHashesByTxid) {
+							for (let txid in blockHashesByTxid) {
 								if (Object.hasOwn(blockHashesByTxid, txid)) {
 									result.blockHeightsByTxid[txid] = blocksByHashResult[blockHashesByTxid[txid]].height;
 								}
@@ -176,22 +174,21 @@ class Session {
 	}
 
 	processRawTx(data, assetName, rawTxResult) {
-		var addrGainsByTx = {};
-		var addrLossesByTx = {};
+		let addrGainsByTx = {};
+		let addrLossesByTx = {};
 		data.addrGainsByTx = addrGainsByTx;
 		data.addrLossesByTx = addrLossesByTx;
-		var handledTxids = [];
-		for (var i = 0; i < rawTxResult.transactions.length; i++) {
-			var tx = rawTxResult.transactions[i];
-			var txInputs = rawTxResult.txInputsByTransaction[tx.txid];
+		let handledTxids = [];
+		for (let i = 0; i < rawTxResult.transactions.length; i++) {
+			let tx = rawTxResult.transactions[i];
 
 			if (handledTxids.includes(tx.txid)) {
 				continue;
 			}
 			handledTxids.push(tx.txid);
-			for (var j = 0; j < tx.vout.length; j++) {
-				var isThiAddress;
-				var value = this.getVoutValue(tx.vout[j], data.address, assetName);
+			for (let j = 0; j < tx.vout.length; j++) {
+				let isThiAddress;
+				let value = this.getVoutValue(tx.vout[j], data.address, assetName);
 				if (value) {
 					if (addrGainsByTx[tx.txid] == null) {
 						addrGainsByTx[tx.txid] = new Decimal(0);
@@ -199,12 +196,11 @@ class Session {
 					addrGainsByTx[tx.txid] = addrGainsByTx[tx.txid].plus(value);
 				}
 			}
-			for (var j = 0; j < tx.vin.length; j++) {
-				var txInput = txInputs[j];
-				var vinJ = tx.vin[j];
+			for (let j = 0; j < tx.vin.length; j++) {
+				let vinJ = tx.vin[j];
 
-				if (txInput != null) {
-					var value = this.getVoutValue(txInput.vout[vinJ.vout], data.address, assetName);
+				if (vinJ.value) {
+					let value = this.getVoutValue(vinJ, data.address, assetName);
 					if (value) {
 						if (addrLossesByTx[tx.txid] == null) {
 							addrLossesByTx[tx.txid] = new Decimal(0);
@@ -219,9 +215,14 @@ class Session {
 		}
 	}
 	getVoutValue(vout, address, assetName) {
-		var value = null;
+		let value = null;
 		if(assetName === this.config.coin) {
-			if(vout && vout.value > 0 && vout.scriptPubKey && vout.scriptPubKey.addresses && vout.scriptPubKey.addresses.includes(address)) {
+			if(vout && vout.value > 0
+				&& (
+					vout.scriptPubKey && vout.scriptPubKey.addresses && vout.scriptPubKey.addresses.includes(address) ||
+						vout.address === address
+				)
+			) {
 				value = new Decimal(vout.value);
 				//console.log("if " + value);
 			}
@@ -237,30 +238,30 @@ class Session {
 	}
 
 	getAddressMetaData(result) {
-		var assetName = result.assetName ? result.assetName : this.config.coin;
-		var address = result.address;
-		var self = this;
+		let assetName = result.assetName ? result.assetName : this.config.coin;
+		let address = result.address;
+		let self = this;
 		return new Promise(function(resolve, reject) {
 			coreApi.getAddress(address).then(function(validateaddressResult) {
 				result.result.validateaddress = validateaddressResult;
 				if (!result.crawlerBot) {
-					var addrScripthash = hexEnc.stringify(sha256(hexEnc.parse(validateaddressResult.scriptPubKey)));
+					let addrScripthash = hexEnc.stringify(sha256(hexEnc.parse(validateaddressResult.scriptPubKey)));
 					addrScripthash = addrScripthash.match(/.{2}/g).reverse().join("");
 					result.electrumScripthash = addrScripthash;
 					addressApi.getAddressDeltas(address, validateaddressResult.scriptPubKey, result.sort,
 																			result.limit, result.offset, result.startBlock, result.numBlocks, assetName).then(addressResult => {
-						var addressDetails = addressResult.addressDeltas;
+						let addressDetails = addressResult.addressDeltas;
 						if (addressResult.errors) {
 							result.addressDetailsErrors = addressResult.errors;
 						}
 						if(addressDetails) {
 							result.addressDetails = addressDetails;
-							if (addressDetails.txCount == 0) {
+							if (addressDetails.txCount === 0) {
 								// make sure txCount=0 pass the falsey check in the UI
 								addressDetails.txCount = "0";
 							}
 							if (addressDetails.txids) {
-								var txids = addressDetails.txids;
+								let txids = addressDetails.txids;
 								// if the active addressApi gives us blockHeightsByTxid, it saves us work, so try to use it
 								result.blockHeightsByTxid = {};
 								if (addressDetails.blockHeightsByTxid) {

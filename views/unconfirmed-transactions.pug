@@ -32,7 +32,6 @@ block content
 								a(href=("/tx/" + tx.txid)) #{tx.txid}
 									
 						div(class="card-body")
-							- var txInputs = mempoolDetails.txInputsByTransaction[tx.txid];
 							- var blockHeight = -1;
 
 							include includes/transaction-io-details.pug

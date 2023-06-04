@@ -194,7 +194,6 @@ class CoinBase {
 					if(skip) {
 						console.log("ip=%s get unlimitted api requests", ip)
 					} else {
-						console.log(unlimittedIps);
 						console.log("ip=%s get limitted api requests. %s/%s min ", ip, maxRequestsCount, maxRequestsWindow)
 					}
 					return skip;

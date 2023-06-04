@@ -705,7 +705,6 @@ function getMasternodeReachableCount() {
 function getOutputAddressBalance(fromHeight, endHeight) {
 	return new Promise((resolve, reject) => {
 		getOutputAddressForBlocks(fromHeight, endHeight).then(async addresses => {
-			console.log("found %s addresses", Object.keys(addresses).length);
 			var addressBalanceRequests = [];
 			var wallets = [];
 			var walletIndex = 0;

@@ -351,8 +351,6 @@ router.get("/block-height/:blockHeight", function(req, res, next) {
 		coreApi.getBlockByHashWithTransactions(result.hash, limit, offset).then(function(result) {
 			res.locals.result.getblock = result.getblock;
 			res.locals.result.transactions = result.transactions;
-			res.locals.result.txInputsByTransaction = result.txInputsByTransaction;
-
 			res.render("block");
 
 			next();
@@ -392,7 +390,6 @@ router.get("/block/:blockHash", function(req, res, next) {
 	coreApi.getBlockByHashWithTransactions(blockHash, limit, offset).then(function(result) {
 		res.locals.result.getblock = result.getblock;
 		res.locals.result.transactions = result.transactions;
-		res.locals.result.txInputsByTransaction = result.txInputsByTransaction;
 
 		res.render("block");
 
@@ -408,9 +405,9 @@ router.get("/block/:blockHash", function(req, res, next) {
 });
 
 router.get("/tx/:transactionId", function(req, res, next) {
-	var txid = req.params.transactionId;
+	let txid = req.params.transactionId;
 
-	var output = -1;
+	let output = -1;
 	if (req.query.output) {
 		output = parseInt(req.query.output);
 	}
@@ -423,7 +420,7 @@ router.get("/tx/:transactionId", function(req, res, next) {
 	coreApi.getRawTransaction({query : {txid : txid}}).then(function(rawTxResult) {
 		res.locals.result.getrawtransaction = rawTxResult;
 
-		var promises = [];
+		let promises = [];
 
 		promises.push(new Promise(function(resolve, reject) {
 			coreApi.getTxUtxos(rawTxResult).then(function(utxos) {
@@ -455,21 +452,31 @@ router.get("/tx/:transactionId", function(req, res, next) {
 			coreApi.getBlockByHash(rawTxResult.blockhash).then(result3 => {
 				res.locals.result.getblock = result3;
 
-				let txids = [];
+				let txidMap = {};
 				for (let i = 0; i < rawTxResult.vin.length; i++) {
-					if (!rawTxResult.vin[i].coinbase) {
-						txids.push(rawTxResult.vin[i].txid);
+					let vin = rawTxResult.vin[i];
+					if (!vin.coinbase && !vin.value) {
+						txidMap[vin.txid] = vin;
 					}
 				}
-
-				coreApi.getRawTransactions(txids).then(function(txInputs) {
-					res.locals.result.txInputs = txInputs;
-
+				coreApi.getRawTransactions(Object.keys(txidMap)).then(function(txInputs) {
+					for(let txInput of txInputs) {
+						let vin = txidMap[txInput.txid];
+						let inputVout = txInput.vout[vin.vout];
+						utils.extractedVinVout(inputVout, vin);
+					}
 					resolve();
 				}).catch(err => {
 					res.locals.pageErrors.push(utils.logError("0q83hreuwgd", err));
 					reject(err);
 				});
+				// coreApi.getRawTransactions(txidMap).then(function(txInputs) {
+				// 	res.locals.result.txInputs = txInputs;
+				// 	resolve();
+				// }).catch(err => {
+				// 	res.locals.pageErrors.push(utils.logError("0q83hreuwgd", err));
+				// 	reject(err);
+				// });
 			}).catch(err => {
 				res.locals.pageErrors.push(utils.logError("0q83hreuwgd", err));
 				reject(err);
@@ -797,7 +804,7 @@ router.get("/about", function(req, res, next) {
 });
 
 router.get("/changelog", function(req, res, next) {
-	res.locals.changelogHtml = marked(global.changelogMarkdown);
+	res.locals.changelogHtml = marked.parse(global.changelogMarkdown);
 
 	res.render("changelog");
 

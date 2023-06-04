@@ -259,27 +259,22 @@ function getAssetValue(vout, assetName) {
 	return 0;
 }
 
-function getTxTotalInputOutputValues(tx, txInputs, blockHeight, assetName) {
+function getTxTotalInputOutputValues(tx, blockHeight, assetName) {
 	var totalInputValue = new Decimal(0);
 	var totalOutputValue = new Decimal(0);
 	if(!assetName) {
 		assetName = coinConfig.ticker;
 	}
 	try {
-		for (var i = 0; i < tx.vin.length; i++) {
-			if (tx.vin[i].coinbase) {
+		for (let i = 0; i < tx.vin.length; i++) {
+			let vin = tx.vin[i];
+			if (vin.coinbase) {
 				totalInputValue = totalInputValue.plus(new Decimal(coinConfig.blockRewardFunction(blockHeight)));
-
 			} else {
-				var txInput = txInputs[i];
-
-				if (txInput) {
+				if (vin.value) {
 					try {
-						var vout = txInput.vout[tx.vin[i].vout];
-						var value = getAssetValue(vout, assetName);
-						if (value) {
-							totalInputValue = totalInputValue.plus(new Decimal(value));
-						}
+						let value = getAssetValue(vin, assetName);
+						totalInputValue = totalInputValue.plus(new Decimal(value));
 					} catch (err) {
 						logError("2397gs0gsse", err, {txid:tx.txid, vinIndex:i});
 					}
@@ -287,12 +282,12 @@ function getTxTotalInputOutputValues(tx, txInputs, blockHeight, assetName) {
 			}
 		}
 
-		for (var i = 0; i < tx.vout.length; i++) {
-			var value = getAssetValue(tx.vout[i], assetName);
+		for (let i = 0; i < tx.vout.length; i++) {
+			let value = getAssetValue(tx.vout[i], assetName);
 			totalOutputValue = totalOutputValue.plus(new Decimal(value));
 		}
 	} catch (err) {
-		logError("2308sh0sg44", err, {tx:tx, txInputs:txInputs, blockHeight:blockHeight});
+		logError("2308sh0sg44", err, {tx:tx, blockHeight:blockHeight});
 	}
 
 	return {input:totalInputValue, output:totalOutputValue};
@@ -534,6 +529,18 @@ function getStatsSummary(json) {
 	updateElementValue("price", price);*/
 }
 
+function extractedVinVout(inputVout, vin) {
+	if (inputVout && inputVout.scriptPubKey) {
+		if (inputVout.scriptPubKey.addresses) {
+			vin.address = inputVout.scriptPubKey.addresses[0];
+		} else if (inputVout.scriptPubKey.address) {
+			vin.address = inputVout.scriptPubKey.address;
+		}
+		vin.value = inputVout.value;
+		vin.valueSat = inputVout.valueSat;
+	}
+}
+
 module.exports = {
 	reflectPromise: reflectPromise,
 	redirectToConnectPageIfNeeded: redirectToConnectPageIfNeeded,
@@ -562,5 +569,6 @@ module.exports = {
 	buildQrCodeUrls: buildQrCodeUrls,
 	ellipsize: ellipsize,
 	getStatsSummary: getStatsSummary,
-	getDifficultyData: getDifficultyData
+	getDifficultyData: getDifficultyData,
+	extractedVinVout: extractedVinVout
 };

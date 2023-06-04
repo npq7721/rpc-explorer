@@ -230,11 +230,9 @@ div(class="tab-content")
 						div(class="card-body px-lg-3 px-2")
 							//pre
 							//	code(class="json bg-light") #{JSON.stringify(result.txInputsByTransaction[tx.txid], null, 4)}
-							if (true)
-								- var txInputs = result.txInputsByTransaction[tx.txid];
-								- var blockHeight = result.getblock.height;
+							- var blockHeight = result.getblock.height;
 
-								include ./transaction-io-details.pug
+							include ./transaction-io-details.pug
 
 					//pre
 					//	code(class="json bg-light") #{JSON.stringify(tx, null, 4)}

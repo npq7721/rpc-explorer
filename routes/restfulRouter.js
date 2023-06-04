@@ -24,12 +24,11 @@ class RestfulRouter {
 						res.send(JSON.stringify(result, null, 4));
 					} else {
 						res.set('Content-Type', 'text/plain');
-						console.log(result);
 						res.send(self.checkAndParseString(result));
 					}
 					next();
 				}).catch(e => {
-					console.log(e);
+					console.error(e);
 					res.send(e + "");
 					next();
 				});
@@ -233,7 +232,7 @@ class RestfulRouter {
 							recordsFiltered : totals[1] ? totals[1] : totals[0]
 						});
 				}).catch(err => {
-					console.log(err);
+					console.error(err);
 					reject(err);
 				});
 			}).catch(reject);
@@ -241,13 +240,13 @@ class RestfulRouter {
 	}
 
 	getBlocks(req) {
-		var self = this;
-		var start = this.checkAndParseParams("number", req.query.start);
-		var limit = this.checkAndParseParams("number", req.query.length);
-		var searchTerm = this.checkAndParseParams("string", req.query.search.value);
-		var draw = req.query.draw;
+		let self = this;
+		let start = this.checkAndParseParams("number", req.query.start);
+		let limit = this.checkAndParseParams("number", req.query.length);
+		let searchTerm = this.checkAndParseParams("string", req.query.search.value);
+		let draw = req.query.draw;
 		return new Promise((resolve, reject) => {
-			var result = {
+			let result = {
 				data : [],
 				draw : draw,
 				recordsTotal : 0,
@@ -259,10 +258,10 @@ class RestfulRouter {
 			if(limit < 0) {
 				limit = 100;
 			}
-			var filteredHeights = searchTerm ? searchTerm.split("-") : [];
-			var lowHeight;
-			var maxHeight;
-			var defaultLow = false;
+			let filteredHeights = searchTerm ? searchTerm.split("-") : [];
+			let lowHeight;
+			let maxHeight;
+			let defaultLow = false;
 			if(filteredHeights.length > 1) {
 				maxHeight = filteredHeights[1];
 				lowHeight = filteredHeights[0];
@@ -563,7 +562,6 @@ class RestfulRouter {
 		var self = this;
 		return new Promise((resolve, reject) => {
 			coreApi.masternode({query : {command :"count"}}, global.coinConfig.masternodeCommand).then(mnCount => {
-				console.log(mnCount);
 				resolve(`${mnCount.enabled}/${mnCount.total}`);
 			}).catch(reject);
 		});

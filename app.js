@@ -436,12 +436,12 @@ app.use(csurf(), (req, res, next) => {
 
 app.use('/', baseActionsRouter);
 if(coins[config.coin].api) {
-	var rateLimit = require("express-rate-limit");
-	var apiProperties = coins[config.coin].api();
-	var limiter = rateLimit(apiProperties.limit);
-	var apiRounter = express.Router();
+	let rateLimit = require("express-rate-limit");
+	let apiProperties = coins[config.coin].api();
+	let limiter = rateLimit(apiProperties.limit);
+	let apiRounter = express.Router();
 	app.use(apiProperties.base_uri, limiter);
-	var restfulAPI = new Restful(apiRounter, apiProperties);
+	let restfulAPI = new Restful(apiRounter, apiProperties);
 	app.use(apiProperties.base_uri, apiRounter);
 }
 

@@ -1,7 +1,7 @@
 - var fontawesomeInputName = "sign-in-alt";
 - var fontawesomeOutputName = "sign-out-alt";
 
-- var totalIOValues = utils.getTxTotalInputOutputValues(tx, txInputs, blockHeight, assetName);
+- var totalIOValues = utils.getTxTotalInputOutputValues(tx, blockHeight, assetName);
 
 script.
 	function showAllTxOutputs(link, txid) {
@@ -15,103 +15,95 @@ script.
 
 div(class="row monospace")
 	div(class="col-lg-6")
-		if (txInputs)
-			- var extraInputCount = 0;
-			each txVin, txVinIndex in tx.vin
-				if (!txVin.coinbase)
-					- var vout = null;
-					if (txInputs && txInputs[txVinIndex])
-						- var txInput = txInputs[txVinIndex];
-						if (txInput.vout && txInput.vout[txVin.vout])
-							- var vout = txInput.vout[txVin.vout];
-
-				if (txVin.coinbase || vout)
-					div(class="row")
-						div(class="tx-io-label")
-							a(data-toggle="tooltip", title=("Input #" + (txVinIndex + 1).toLocaleString()), style="white-space: nowrap;")
-								i(class=("fas fa-" + fontawesomeInputName + " mr-2"))
-								span(class="d-inline d-md-none") Input #
-								span #{(txVinIndex + 1).toLocaleString()}
-								if (tx.vin.length > 0)
-									span(class="d-inline d-md-none font-weight-light text-muted")  / #{tx.vin.length.toLocaleString()}
-
-						div(class="tx-io-content")
-							div(class="row pr-3")
-								div(class="tx-io-desc")
-									if (txVin.coinbase)
-										span(class="rounded bg-primary text-white px-2 py-1 mr-2") coinbase
-										span Newly minted coins
-									else
-										if (vout && vout.scriptPubKey && (vout.scriptPubKey.addresses || vout.scriptPubKey.address))
-											- var address = vout.scriptPubKey.addresses ? vout.scriptPubKey.addresses[0] : vout.scriptPubKey.address
-											div(class="word-wrap")
-												a(href=("/address/" + address), class=(txIOHighlightAddress == address ? "font-weight-bold" : null)) #{address}
-												if (global.specialAddresses[address])
-													- var specialAddressInfo = global.specialAddresses[address];
-													if (specialAddressInfo.type == "minerPayout")
-														span
-														a(data-toggle="tooltip", title=("Miner payout address: " + specialAddressInfo.minerInfo.name))
-															i(class="fas fa-certificate text-primary")
-													else if (specialAddressInfo.type == "donation")
-														span
-														a(data-toggle="tooltip", title=("Development donation address. All support is appreciated!"))
-															i(class="fas fa-certificate text-primary")
-
-											span(class="small") via
-												a(href=("/tx/" + txInput.txid + "#output-" + txVin.vout)) #{txInput.txid.substring(0, 20)}...[#{txVin.vout}]
-
-								div(class="tx-io-value")
-									if (txVin.coinbase)
-										- var currencyValue = coinConfig.blockRewardFunction(blockHeight);
-										- var tokenName = config.coin;
-										include ./value-display.pug
-									else if(vout)
-										if (vout.scriptPubKey && vout.scriptPubKey.asset)
-											- var currencyValue = vout.scriptPubKey.asset.amount;
-											- var tokenName = vout.scriptPubKey.asset.name;
-										else
-											- var currencyValue = vout.value;
-											- var tokenName = config.coin;
-										include ./value-display.pug
-									else
-										- var currencyValue = 0;
-										- var tokenName = config.coin;
-										include ./value-display.pug
-
-					hr
-
-				else
-					- extraInputCount = extraInputCount + 1;
-
-			if (extraInputCount > 0)
+		- var extraInputCount = 0;
+		each txVin, txVinIndex in tx.vin
+			if (txVin.coinbase || txVin.value)
 				div(class="row")
 					div(class="tx-io-label")
-						a(data-toggle="tooltip", title=("Input #" + (tx.vin.length - extraInputCount + 1).toLocaleString() + " - " + tx.vin.length.toLocaleString()), style="white-space: nowrap;")
+						a(data-toggle="tooltip", title=("Input #" + (txVinIndex + 1).toLocaleString()), style="white-space: nowrap;")
 							i(class=("fas fa-" + fontawesomeInputName + " mr-2"))
 							span(class="d-inline d-md-none") Input #
-							i(class=("fas fa-ellipsis-h mr-2"))
+							span #{(txVinIndex + 1).toLocaleString()}
+							if (tx.vin.length > 0)
+								span(class="d-inline d-md-none font-weight-light text-muted")  / #{tx.vin.length.toLocaleString()}
 
 					div(class="tx-io-content")
 						div(class="row pr-3")
 							div(class="tx-io-desc")
-								span #{extraInputCount.toLocaleString()} more input(s)
-								br
-								span(class="small") see
-									a(href=("/tx/" + tx.txid)) transactions details
+								if (txVin.coinbase)
+									span(class="rounded bg-primary text-white px-2 py-1 mr-2") coinbase
+									span Newly minted coins
+								else
+									if (txVin.address)
+										- let address = txVin.address
+										div(class="word-wrap")
+											a(href=("/address/" + address), class=(txIOHighlightAddress == address ? "font-weight-bold" : null)) #{address}
+											if (global.specialAddresses[address])
+												- var specialAddressInfo = global.specialAddresses[address];
+												if (specialAddressInfo.type == "minerPayout")
+													span
+													a(data-toggle="tooltip", title=("Miner payout address: " + specialAddressInfo.minerInfo.name))
+														i(class="fas fa-certificate text-primary")
+												else if (specialAddressInfo.type == "donation")
+													span
+													a(data-toggle="tooltip", title=("Development donation address. All support is appreciated!"))
+														i(class="fas fa-certificate text-primary")
+
+										span(class="small") via
+											a(href=("/tx/" + txVin.txid + "#output-" + txVin.vout)) #{txVin.txid.substring(0, 20)}...[#{txVin.vout}]
 
 							div(class="tx-io-value")
-								- var currencyValue = Number(totalIOValues.output) - Number(totalIOValues.input);
-								- var tokenName = assetName;
-								include ./value-display.pug
+								if (txVin.coinbase)
+									- var currencyValue = coinConfig.blockRewardFunction(blockHeight);
+									- var tokenName = config.coin;
+									include ./value-display.pug
+								else if(txVin.value)
+									if (txVin.asset)
+										- var currencyValue = txVin.value;
+										- var tokenName = txVin.asset.name;
+									else
+										- var currencyValue = txVin.value;
+										- var tokenName = config.coin;
+									include ./value-display.pug
+								else
+									- var currencyValue = 0;
+									- var tokenName = config.coin;
+									include ./value-display.pug
+
 				hr
 
-			div(class="row mb-5 mb-lg-2 pr-3")
-				div(class="col")
-					div(class="font-weight-bold text-left text-md-right")
-						span(class="d-block d-md-none") Total Input:
-						- var currencyValue = totalIOValues.input;
-						- var tokenName = assetName;
-						include ./value-display.pug
+			else
+				- extraInputCount = extraInputCount + 1;
+
+		if (extraInputCount > 0)
+			div(class="row")
+				div(class="tx-io-label")
+					a(data-toggle="tooltip", title=("Input #" + (tx.vin.length - extraInputCount + 1).toLocaleString() + " - " + tx.vin.length.toLocaleString()), style="white-space: nowrap;")
+						i(class=("fas fa-" + fontawesomeInputName + " mr-2"))
+						span(class="d-inline d-md-none") Input #
+						i(class=("fas fa-ellipsis-h mr-2"))
+
+				div(class="tx-io-content")
+					div(class="row pr-3")
+						div(class="tx-io-desc")
+							span #{extraInputCount.toLocaleString()} more input(s)
+							br
+							span(class="small") see
+								a(href=("/tx/" + tx.txid)) transactions details
+
+						div(class="tx-io-value")
+							- var currencyValue = Number(totalIOValues.output) - Number(totalIOValues.input);
+							- var tokenName = assetName;
+							include ./value-display.pug
+			hr
+
+		div(class="row mb-5 mb-lg-2 pr-3")
+			div(class="col")
+				div(class="font-weight-bold text-left text-md-right")
+					span(class="d-block d-md-none") Total Input:
+					- var currencyValue = totalIOValues.input;
+					- var tokenName = assetName;
+					include ./value-display.pug
 
 	div(class="col-lg-6")
 		- var maxRegularRowCount = (txIOHighlightAddress != null ? config.site.addressPage.txOutputMaxDefaultDisplay : 10000000);
