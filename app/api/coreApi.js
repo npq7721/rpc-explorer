@@ -354,17 +354,16 @@ function getMempoolDetails(start, count) {
 			getRawTransactions(txids).then(function(transactions) {
 				let maxInputsTracked = config.site.txMaxInput;
 				let vinMap = [];
-				for (let i = 0; i < transactions.length; i++) {
-					let transaction = transactions[i];
-
+				for (let transaction of transactions) {
 					if (transaction && transaction.vin) {
 						for (let j = 0; j < Math.min(maxInputsTracked, transaction.vin.length); j++) {
 							let vin = transaction.vin[j];
-							if (vin.txid && !vin.value) {
+							if (vin.txid && !vin.address) {
 								vinMap[vin.txid] = vin;
 							}
 						}
 					}
+					transaction.vout.forEach(utils.findAddressVout);
 				}
 
 				getRawTransactions(vinMap).then(function(vinTransactions) {
@@ -754,17 +753,16 @@ function getRawTransactionsWithInputs(txids, maxInputs=-1) {
 			}
 
 			let vinMap = [];
-			for (let i = 0; i < transactions.length; i++) {
-				let transaction = transactions[i];
-
+			for (let transaction of transactions) {
 				if (transaction && transaction.vin) {
 					for (let j = 0; j < Math.min(maxInputsTracked, transaction.vin.length); j++) {
 						let vin = transaction.vin[j];
-						if (vin.txid && !vin.value) {
+						if (vin.txid && !vin.address) {
 							vinMap.push(vin.txid);
 						}
 					}
 				}
+				transaction.vout.forEach(utils.findAddressVout);
 			}
 
 			getRawTransactions(vinMap).then(function(vinTransactions) {
@@ -793,13 +791,8 @@ function getBlockByHashWithTransactions(blockHash, txLimit, txOffset) {
 					txids.push(block.tx[i]);
 				}
 			}
-
-			getRawTransactions(txids).then(function(transactions) {
-				if (transactions.length === txids.length) {
-					block.coinbaseTx = transactions[0];
-					block.totalFees = utils.getBlockTotalFeesFromCoinbaseTxAndBlockHeight(block.coinbaseTx, block.height);
-					block.miner = utils.getMinerFromCoinbaseTx(block.coinbaseTx);
-				}
+			let isProofOfState = block.flags.includes("proof-of-stake")
+			getRawTransactions(txids).then(async (transactions) => {
 
 				// if we're on page 2, we don't really want it anymore...
 				if (txOffset > 0) {
@@ -808,27 +801,35 @@ function getBlockByHashWithTransactions(blockHash, txLimit, txOffset) {
 
 				let maxInputsTracked = config.site.txMaxInput;
 				let vinMap = {};
-				for (let i = 0; i < transactions.length; i++) {
-					let transaction = transactions[i];
+				for (let transaction of transactions) {
 					if (transaction && transaction.vin) {
 						for (let j = 0; j < Math.min(maxInputsTracked, transaction.vin.length); j++) {
 							let vin = transaction.vin[j];
-							if (vin.txid && !vin.value) {
+							if (vin.txid && !vin.address) {
 								vinMap[vin.txid] = vin;
 							}
 						}
 					}
+					transaction.vout.forEach(utils.findAddressVout);
 				}
-
-				getRawTransactions(vinMap).then(function(vinTransactions) {
+				try {
+					let vinTransactions = await getRawTransactions(Object.keys(vinMap));
 					vinTransactions.forEach(function(tx) {
-						let vin = vinMap[vinTransactions.txid];
-						let inputVout = vinTransactions.vout[vin.vout];
-						utils.extractedVinVout(inputVout, vin);
+						let vin = vinMap[tx.txid];
+						if(vin) {
+							let inputVout = tx.vout[vin.vout];
+							utils.extractedVinVout(inputVout, vin);
+						}
 					});
-
-					resolve({ getblock:block, transactions:transactions });
-				});
+					if (transactions.length === txids.length) {
+						block.coinbaseTx = isProofOfState ? transactions[1] : transactions[0];
+						block.totalFees = utils.getBlockTotalFeesFromCoinbaseTxAndBlockHeight(block.coinbaseTx, block.height, isProofOfState);
+						block.miner = utils.getMinerFromCoinbaseTx(block.coinbaseTx);
+					}
+				} catch(err) {
+					console.error(err);
+				}
+				resolve({ getblock:block, transactions:transactions });
 			});
 		});
 	});

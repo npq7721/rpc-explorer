@@ -136,7 +136,7 @@ div(class="row monospace")
 						div(class=("row pr-3"))
 							div(class="tx-io-desc")
 								if (vout.scriptPubKey)
-									- var address = vout.scriptPubKey.addresses ? vout.scriptPubKey.addresses[0] : vout.scriptPubKey.address
+									- var address = vout.address
 									if (address)
 										if (false)
 											if (vout.scriptPubKey.type == "pubkey")
@@ -176,7 +176,13 @@ div(class="row monospace")
 										span(class="monospace")
 											span(class="rounded bg-primary text-white px-2 py-1 mr-2") OP_RETURN
 											span #{utils.hex2ascii(vout.scriptPubKey.asm.substring("OP_RETURN ".length))}
-
+									else if (vout.scriptPubKey.type === "nonstandard" && vout.value === 0)
+										span(class="monospace")
+											span(class="rounded bg-primary text-white px-2 py-1 mr-2") PROOF_OF_STAKE
+											if(tx.vin[0].coinbase)
+												span No Staker address in coinbase
+											else
+												span Stake Transaction
 									else
 										span(class="monospace")
 											span(class="text-warning font-weight-bold") Unable to decode output:

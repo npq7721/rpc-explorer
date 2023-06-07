@@ -9,6 +9,7 @@ let qrcode = require("qrcode");
 
 let config = require("./config.js");
 let coins = require("./coins.js");
+const bitcoinjs = require("bitcoinjs-lib");
 let coinConfig = coins[config.coin];
 
 let exponentScales = [
@@ -22,7 +23,14 @@ let exponentScales = [
 	{val:1000000000000, name:"tera", abbreviation:"T", exponent:"12"},
 	{val:1000000000, name:"giga", abbreviation:"G", exponent:"9"},
 	{val:1000000, name:"mega", abbreviation:"M", exponent:"6"},
-	{val:1000, name:"kilo", abbreviation:"K", exponent:"3"}
+	{val:1000, name:"kilo", abbreviation:"K", exponent:"3"},
+	{val:0.1, name:"kilo", abbreviation:"", exponent:"-1"},
+	{val:0.01, name:"kilo", abbreviation:"", exponent:"-2"},
+	{val:0.001, name:"kilo", abbreviation:"", exponent:"-3"},
+	{val:0.0001, name:"kilo", abbreviation:"", exponent:"-4"},
+	{val:0.00001, name:"kilo", abbreviation:"", exponent:"-5"}
+
+
 ];
 
 function redirectToConnectPageIfNeeded(req, res) {
@@ -293,22 +301,30 @@ function getTxTotalInputOutputValues(tx, blockHeight, assetName) {
 	return {input:totalInputValue, output:totalOutputValue};
 }
 
-function getBlockTotalFeesFromCoinbaseTxAndBlockHeight(coinbaseTx, blockHeight) {
+function getBlockTotalFeesFromCoinbaseTxAndBlockHeight(coinbaseTx, blockHeight, isProofOfStake) {
 	if (coinbaseTx == null) {
 		return 0;
 	}
 
-	var blockReward = coinConfig.blockRewardFunction(blockHeight);
+	let blockReward = coinConfig.blockRewardFunction(blockHeight);
+	let totalStake = 0;
+	if(isProofOfStake) {
+		for(let vin of coinbaseTx.vin) {
+			if(vin.value) {
+				totalStake += vin.value;
+			}
+		}
+	}
 
-	var totalOutput = new Decimal(0);
-	for (var i = 0; i < coinbaseTx.vout.length; i++) {
-		var outputValue = coinbaseTx.vout[i].value;
+	let totalOutput = new Decimal(0);
+	for (let i = 0; i < coinbaseTx.vout.length; i++) {
+		let outputValue = coinbaseTx.vout[i].value;
 		if (outputValue > 0) {
 			totalOutput = totalOutput.plus(new Decimal(outputValue));
 		}
 	}
 
-	return totalOutput.minus(new Decimal(blockReward));
+	return totalOutput.minus(new Decimal(blockReward + totalStake));
 }
 
 function refreshExchangeRates() {
@@ -346,10 +362,10 @@ function parseExponentStringDouble(val) {
 }
 
 function formatLargeNumber(n, decimalPlaces) {
-	for (var i = 0; i < exponentScales.length; i++) {
-		var item = exponentScales[i];
+	for (let i = 0; i < exponentScales.length; i++) {
+		let item = exponentScales[i];
 
-		var fraction = new Decimal(n / item.val);
+		let fraction = new Decimal(n / item.val);
 		if (fraction >= 1) {
 			return [fraction.toDecimalPlaces(decimalPlaces), item];
 		}
@@ -531,13 +547,26 @@ function getStatsSummary(json) {
 
 function extractedVinVout(inputVout, vin) {
 	if (inputVout && inputVout.scriptPubKey) {
-		if (inputVout.scriptPubKey.addresses) {
-			vin.address = inputVout.scriptPubKey.addresses[0];
-		} else if (inputVout.scriptPubKey.address) {
-			vin.address = inputVout.scriptPubKey.address;
-		}
+		findAddressVout(inputVout);
+		vin.address = inputVout.address;
 		vin.value = inputVout.value;
 		vin.valueSat = inputVout.valueSat;
+	}
+}
+
+function findAddressVout(vout) {
+	if(vout.scriptPubKey.addresses) {
+		vout.address = vout.scriptPubKey.addresses[0];
+	} else if(vout.scriptPubKey.address) {
+		vout.address = vout.scriptPubKey.address;
+	} else if(vout.scriptPubKey.type === "pubkey") {
+		let pubkey = vout.scriptPubKey.asm.substring(0, vout.scriptPubKey.asm.length - 12);
+		let network = coins.networks[config.coin].bitcoinjs
+		let { address} = bitcoinjs.payments.p2pkh({
+			pubkey :  Buffer.from(pubkey, 'hex'),
+			network : network
+		});
+		vout.address = address;
 	}
 }
 
@@ -570,5 +599,6 @@ module.exports = {
 	ellipsize: ellipsize,
 	getStatsSummary: getStatsSummary,
 	getDifficultyData: getDifficultyData,
-	extractedVinVout: extractedVinVout
+	extractedVinVout: extractedVinVout,
+	findAddressVout: findAddressVout
 };

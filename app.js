@@ -101,6 +101,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 process.on("unhandledRejection", (reason, p) => {
 	debugLog("Unhandled Rejection at: Promise", p, "reason:", reason, "stack:", (reason != null ? reason.stack : "null"));
 });
+process.on('uncaughtException', (err) => {
+	debugLog("Unhandled Exception: ", err);
+
+	// Handle the error safely
+	console.log(err)
+})
 
 function loadMiningPoolConfigs() {
 	global.miningPoolsConfigs = [];

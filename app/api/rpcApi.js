@@ -31,15 +31,27 @@ const rpcQueue = async.queue(function(task, callback) {
 
 function getBlockchainInfo() {
 	return new Promise((resolve, reject) => {
-		getRpcData("getblockchaininfo").then(result => {
+		getRpcData("getblockchaininfo").then(async result => {
 			result.difficultiesData = [];
-			if(result.difficulty) {
+			let coin = coins[config.coin];
+			if(coin.type === "hydrid") {
+				try {
+					let diffs = await getRpcData("getdifficulty");
+					console.log(diffs);
+					result.difficultiesData.push(utils.getDifficultyData("POW Difficulty", diffs["proof-of-work"]));
+					result.difficultiesData.push(utils.getDifficultyData("POS Difficulty", diffs["proof-of-stake"]));
+
+				} catch (error) {
+					reject(error);
+				}
+			} else if(result.difficulty) {
 				result.difficultiesData.push(utils.getDifficultyData("Difficulty", result.difficulty));
 			} else if(result.difficulties) {
 				for(var diffName in result.difficulties) {
 					result.difficultiesData.push(utils.getDifficultyData(diffName + " diff",  result.difficulties[diffName]));
 				}
 			}
+
 			resolve(result);
 		}).catch(reject);
 	});

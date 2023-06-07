@@ -447,7 +447,7 @@ router.get("/tx/:transactionId", function(req, res, next) {
 				});
 			}));
 		}
-
+		rawTxResult.vout.forEach(utils.findAddressVout);
 		promises.push(new Promise(function(resolve, reject) {
 			coreApi.getBlockByHash(rawTxResult.blockhash).then(result3 => {
 				res.locals.result.getblock = result3;
@@ -455,7 +455,7 @@ router.get("/tx/:transactionId", function(req, res, next) {
 				let txidMap = {};
 				for (let i = 0; i < rawTxResult.vin.length; i++) {
 					let vin = rawTxResult.vin[i];
-					if (!vin.coinbase && !vin.value) {
+					if (!vin.coinbase && !vin.address) {
 						txidMap[vin.txid] = vin;
 					}
 				}

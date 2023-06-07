@@ -1,7 +1,7 @@
-var Decimal = require("decimal.js");
+const Decimal = require("decimal.js");
 Decimal8 = Decimal.clone({ precision:8, rounding:8 });
-var CoinBase = require("./base.js");
-var currencyUnits = [
+const CoinBase = require("./base.js");
+const currencyUnits = [
 	{
 		type:"native",
 		name:"TNOWP",
@@ -56,8 +56,7 @@ var currencyUnits = [
 		symbol:"¥"
 	},
 ];
-
-var Nowpcoin = new CoinBase("Nowpcoin", "TNOWP", "nowpcoin");
+const Nowpcoin = new CoinBase("Nowpcoin", "TNOWP", "nowpcoin");
 Nowpcoin.addProperties({
 	logoUrl:"/img/logo/nowp.png",
 	siteTitle:"Nowp Testnet Explorer",
@@ -71,6 +70,7 @@ Nowpcoin.addProperties({
 	],
 	maxBlockWeight: 4000000,
 	targetBlockTimeSeconds: 60,
+	type: "hydrid",
 	currencyUnits:currencyUnits,
 	currencyUnitsByName:{"TNOWP":currencyUnits[0], "mTNOWP":currencyUnits[1], "nits":currencyUnits[2], "nat":currencyUnits[3]},
 	baseCurrencyUnit:currencyUnits[3],
@@ -142,7 +142,7 @@ Nowpcoin.addProperties({
 	],
 	blockRewardFunction:function(blockHeight) {
 		let nSubsidy = 188;
-		if(blockHeight == 1) {
+		if(blockHeight === 1) {
 			nSubsidy = 12600000;
 		} else if(blockHeight <= 1440) {
 			nSubsidy = 10;

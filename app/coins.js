@@ -101,7 +101,7 @@ module.exports = {
 		TNOWP : {
 			bitcoinjs : {
 				messagePrefix: '\x18Nowp Signed Message:\n',
-				bech32: 'rc',
+				bech32: 'tnp',
 				bip32: {
 					public: 0x043587cf,
 					private: 0x04358394,

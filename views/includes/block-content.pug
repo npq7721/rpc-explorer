@@ -55,6 +55,11 @@ div(class="tab-content")
 								span #{moment.utc(new Date(result.getblock.time * 1000)).format("Y-MM-DD HH:mm:ss")} utc
 								- var timeAgoTime = result.getblock.time;
 								include ./time-ago.pug
+						if(result.getblock.flags)
+							div(class="row")
+								div(class="summary-split-table-label") Flags
+								div(class="summary-split-table-content monospace")
+									span #{result.getblock.flags}
 
 						div(class="row")
 							div(class="summary-split-table-label") Transactions
