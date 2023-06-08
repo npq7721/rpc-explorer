@@ -99,9 +99,9 @@ div(class="card mb-3 shadow-sm")
 
               div(class="col-md-6")
                 div(class="text-md-right")
-                  if (tx.time)
-                    span #{moment.utc(new Date(tx["time"] * 1000)).format("Y-MM-DD HH:mm:ss")} utc
-                    - var timeAgoTime = tx.time;
+                  if (tx.blocktime)
+                    span #{moment.utc(new Date(tx["blocktime"] * 1000)).format("Y-MM-DD HH:mm:ss")} utc
+                    - var timeAgoTime = tx.blocktime;
                     include time-ago.pug
 
                   else

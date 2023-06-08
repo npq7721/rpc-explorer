@@ -37,7 +37,6 @@ function getBlockchainInfo() {
 			if(coin.type === "hydrid") {
 				try {
 					let diffs = await getRpcData("getdifficulty");
-					console.log(diffs);
 					result.difficultiesData.push(utils.getDifficultyData("POW Difficulty", diffs["proof-of-work"]));
 					result.difficultiesData.push(utils.getDifficultyData("POS Difficulty", diffs["proof-of-stake"]));
 

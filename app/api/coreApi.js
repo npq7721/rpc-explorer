@@ -353,7 +353,7 @@ function getMempoolDetails(start, count) {
 
 			getRawTransactions(txids).then(function(transactions) {
 				let maxInputsTracked = config.site.txMaxInput;
-				let vinMap = [];
+				let vinMap = {};
 				for (let transaction of transactions) {
 					if (transaction && transaction.vin) {
 						for (let j = 0; j < Math.min(maxInputsTracked, transaction.vin.length); j++) {
@@ -366,11 +366,11 @@ function getMempoolDetails(start, count) {
 					transaction.vout.forEach(utils.findAddressVout);
 				}
 
-				getRawTransactions(vinMap).then(function(vinTransactions) {
+				getRawTransactions(Object.keys(vinMap)).then(function(vinTransactions) {
 
 					vinTransactions.forEach(function(tx) {
-						let vin = vinMap[vinTransactions.txid];
-						let inputVout = vinTransactions.vout[vin.vout];
+						let vin = vinMap[tx.txid];
+						let inputVout = tx.vout[vin.vout];
 						utils.extractedVinVout(inputVout, vin);
 					});
 
@@ -752,24 +752,26 @@ function getRawTransactionsWithInputs(txids, maxInputs=-1) {
 				maxInputsTracked = maxInputs;
 			}
 
-			let vinMap = [];
+			let vinMap = {};
 			for (let transaction of transactions) {
 				if (transaction && transaction.vin) {
 					for (let j = 0; j < Math.min(maxInputsTracked, transaction.vin.length); j++) {
 						let vin = transaction.vin[j];
 						if (vin.txid && !vin.address) {
-							vinMap.push(vin.txid);
+							vinMap[vin.txid] = vin;
 						}
 					}
 				}
 				transaction.vout.forEach(utils.findAddressVout);
 			}
 
-			getRawTransactions(vinMap).then(function(vinTransactions) {
+			getRawTransactions(Object.keys(vinMap)).then(function(vinTransactions) {
 				vinTransactions.forEach(function(tx) {
-					let vin = vinMap[vinTransactions.txid];
-					let inputVout = vinTransactions.vout[vin.vout];
-					utils.extractedVinVout(inputVout, vin);
+					let vin = vinMap[tx.txid];
+					if(vin) {
+						let inputVout = tx.vout[vin.vout];
+						utils.extractedVinVout(inputVout, vin);
+					}
 				});
 
 				resolve({ transactions:transactions});

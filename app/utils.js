@@ -28,7 +28,8 @@ let exponentScales = [
 	{val:0.01, name:"kilo", abbreviation:"", exponent:"-2"},
 	{val:0.001, name:"kilo", abbreviation:"", exponent:"-3"},
 	{val:0.0001, name:"kilo", abbreviation:"", exponent:"-4"},
-	{val:0.00001, name:"kilo", abbreviation:"", exponent:"-5"}
+	{val:0.00001, name:"kilo", abbreviation:"", exponent:"-5"},
+	{val:0.000001, name:"kilo", abbreviation:"", exponent:"-6"}
 
 
 ];
