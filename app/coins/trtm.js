@@ -2,8 +2,9 @@ var Decimal = require("decimal.js");
 Decimal8 = Decimal.clone({ precision:8, rounding:8 });
 var MasternodeBase = require("./masternodeBase.js");
 
-var Raptoreum = new MasternodeBase("Raptoreum Testnet", "TRTM", "raptoreum testnet", ["trap", "traposhi"], "smartnode");
+var Raptoreum = new MasternodeBase("Raptoreum Testnet", "tRTM", "raptoreum testnet", ["trap", "traposhi"], "smartnode");
 Raptoreum.addProperties({
+	hasassets: true,
 	logoUrl:"/img/logo/rtm.svg",
 	siteTitle:"Raptoreum Test Explorer",
 	siteDescriptionHtml:"<b>RTM Explorer</b> is <a href='https://github.com/Raptoreum/RTM-rpc-explorer). If you run your own [Raptoreum Full Node](https://github.com/Raptoreum/Raptoreum/releases), **RTM Explorer** can easily run alongside it, communicating via RPC calls. See the project [ReadMe](https://github.com/Raptoreum/RTM-rpc-explorer) for a list of features and instructions for running.",
@@ -18,7 +19,7 @@ Raptoreum.addProperties({
 	],
 	targetBlockTimeSeconds: 60,
 	currencyUnitsByName:{
-		"TRTM": Raptoreum.properties.currencyUnits[0],
+		"tRTM": Raptoreum.properties.currencyUnits[0],
 		"mTRTM": Raptoreum.properties.currencyUnits[1],
 		"tpits": Raptoreum.properties.currencyUnits[2],
 		"trap": Raptoreum.properties.currencyUnits[3]

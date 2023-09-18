@@ -86,7 +86,7 @@ class Cache {
       }
       return this.LRUGet(key);
     } else {
-      return noopGet(key);
+      return this.noopGet(key);
     }
   }
 

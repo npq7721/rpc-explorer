@@ -17,7 +17,7 @@ div(class="row monospace")
 	div(class="col-lg-6")
 		- var extraInputCount = 0;
 		each txVin, txVinIndex in tx.vin
-			if (txVin.coinbase || txVin.value)
+			if (txVin.coinbase || txVin.value || txVin.scriptPubKey)
 				div(class="row")
 					div(class="tx-io-label")
 						a(data-toggle="tooltip", title=("Input #" + (txVinIndex + 1).toLocaleString()), style="white-space: nowrap;")
@@ -57,10 +57,10 @@ div(class="row monospace")
 									- var currencyValue = coinConfig.blockRewardFunction(blockHeight);
 									- var tokenName = config.coin;
 									include ./value-display.pug
-								else if(txVin.value)
-									if (txVin.asset)
-										- var currencyValue = txVin.value;
-										- var tokenName = txVin.asset.name;
+								else if(txVin.value || txVin.scriptPubKey)
+									if ( txVin.scriptPubKey.asset)
+										- var currencyValue = txVin.scriptPubKey.asset.amount;
+										- var tokenName = txVin.scriptPubKey.asset.name;
 									else
 										- var currencyValue = txVin.value;
 										- var tokenName = config.coin;

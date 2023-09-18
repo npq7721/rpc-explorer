@@ -508,8 +508,8 @@ router.get("/tx/:transactionId", function(req, res, next) {
 });
 
 routing("/blocktableview/:blockTotal", "get", "renderBlocksTableView", null, true);
-routing("/addressview/:address", "get", "renderAddressView", [coins[config.coin].assetSupported],true);
-routing("/address/:address", "get", "renderAddressPage", [coins[config.coin].assetSupported],true);
+routing("/addressview/:address", "get", "renderAddressView", [coins[config.coin].assetSupported, coins[config.coin].hasassets],true);
+routing("/address/:address", "get", "renderAddressPage", [coins[config.coin].assetSupported, coins[config.coin].hasassets],true);
 
 router.get("/rpc-terminal", function(req, res, next) {
 	if (!config.demoSite && !req.authenticated) {
