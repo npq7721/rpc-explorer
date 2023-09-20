@@ -280,7 +280,7 @@ function getTxTotalInputOutputValues(tx, blockHeight, assetName) {
 			if (vin.coinbase) {
 				totalInputValue = totalInputValue.plus(new Decimal(coinConfig.blockRewardFunction(blockHeight)));
 			} else {
-				if (vin.value) {
+				if (vin.value || vin.scriptPubKey) {
 					try {
 						let value = getAssetValue(vin, assetName);
 						totalInputValue = totalInputValue.plus(new Decimal(value));
@@ -552,6 +552,7 @@ function extractedVinVout(inputVout, vin) {
 		vin.address = inputVout.address;
 		vin.value = inputVout.value;
 		vin.valueSat = inputVout.valueSat;
+		vin.scriptPubKey = inputVout.scriptPubKey;
 	}
 }
 

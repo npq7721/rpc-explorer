@@ -235,6 +235,17 @@ block content
                                                 span Coinbase
                                             else if(result.getrawtransaction.qcTx)
                                                 span Quorum Commitment
+                                            else if(result.getrawtransaction.MintAssetTx)
+                                                span Mint Asset
+                                        if(result.getrawtransaction.MintAssetTx)
+                                            each vout, voutIndex in result.getrawtransaction.vout
+                                                if (vout.scriptPubKey.asset)
+                                                    div(class="summary-split-table-label") Asset
+                                                    div(class="summary-split-table-content monospace")
+                                                        span #{vout.scriptPubKey.asset.name}
+                                                    div(class="summary-split-table-label") Amount
+                                                    div(class="summary-split-table-content monospace")
+                                                        span #{vout.scriptPubKey.asset.amount}
 
                 if (result.getrawtransaction.vin.length > 0 && result.getrawtransaction.vin[0].coinbase)
                     div(class="card mb-3 shadow-sm")

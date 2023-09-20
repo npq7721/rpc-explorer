@@ -753,12 +753,16 @@ function getRawTransactionsWithInputs(txids, maxInputs=-1) {
 			}
 
 			let vinMap = {};
+			let voutMap = {};
 			for (let transaction of transactions) {
 				if (transaction && transaction.vin) {
 					for (let j = 0; j < Math.min(maxInputsTracked, transaction.vin.length); j++) {
 						let vin = transaction.vin[j];
 						if (vin.txid && !vin.address) {
 							vinMap[vin.txid] = vin;
+							if (!voutMap[vin.txid])
+								voutMap[vin.txid] = {};
+							voutMap[vin.txid][vin.vout] = vin;
 						}
 					}
 				}
@@ -767,10 +771,12 @@ function getRawTransactionsWithInputs(txids, maxInputs=-1) {
 
 			getRawTransactions(Object.keys(vinMap)).then(function(vinTransactions) {
 				vinTransactions.forEach(function(tx) {
-					let vin = vinMap[tx.txid];
-					if(vin) {
-						let inputVout = tx.vout[vin.vout];
-						utils.extractedVinVout(inputVout, vin);
+					for ( let t in voutMap[tx.txid]) {
+						let vin = voutMap[tx.txid][t];
+						if(vin) {
+							let inputVout = tx.vout[vin.vout];
+							utils.extractedVinVout(inputVout, vin);
+						}
 					}
 				});
 
@@ -793,7 +799,9 @@ function getBlockByHashWithTransactions(blockHash, txLimit, txOffset) {
 					txids.push(block.tx[i]);
 				}
 			}
-			let isProofOfState = block.flags.includes("proof-of-stake")
+			let isProofOfState = false;
+			if (block.flags)
+				isProofOfState = block.flags.includes("proof-of-stake")
 			getRawTransactions(txids).then(async (transactions) => {
 
 				// if we're on page 2, we don't really want it anymore...

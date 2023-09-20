@@ -259,11 +259,11 @@ block content
 								if(assetName !== coinConfig.ticker)
 									- var hrefTab = `#tab-${assetName}`
 									li(class="nav-item")
-										a(data-toggle="tab", href=hrefTab, class="nav-link", role="tab", onclick=`ajaxUpdate("/addressview/${address}?assetName=${assetName}", "tab-${assetName}")`) #{assetName}
+										a(data-toggle="tab", href=hrefTab, class="nav-link", role="tab", onclick=`ajaxUpdate("/addressview/${address}?assetName=${assetName}&startBlock=${startBlock}&numBlocks=${numBlocks}", "tab-${assetName}")`) #{assetName}
 					if (hasAsset)
 						div(class="tab-content")
 							div(id=`tab-${coinConfig.ticker}`, class="tab-pane active", role="tabpanel")
-								div(class="spinner-border lazyload", loadurl=`${paginationBaseUrl}`, role="status")
+								div(class="spinner-border lazyload", loadurl=`${paginationBaseUrl}&startBlock=${startBlock}&numBlocks=${numBlocks}`, role="status")
 									span(class="sr-only") Loading...
 							each bal, assetName in addressDetails.assets
 								if(assetName !== coinConfig.ticker)

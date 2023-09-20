@@ -11,11 +11,11 @@ module.exports = {
 	"LTC": ltc,
 	"PGN": pgn,
 	"RTM": rtm,
-	"TRTM": trtm,
+	"tRTM": trtm,
 	"PYRK" : pyrk,
 	"TNOWP" : tnowp,
 	
-	"coins":["BTC", "LTC", "PGN", "RTM", "TRTM", "PYRK", "TNOWP"],
+	"coins":["BTC", "LTC", "PGN", "RTM", "tRTM", "PYRK", "TNOWP"],
 
 	networks : {
 		BTC : {
@@ -73,7 +73,7 @@ module.exports = {
 		    'explorer.raptoreum.com'
 		  ]
 		},
-		TRTM : {
+		tRTM : {
 			bitcoinjs : {
 				messagePrefix: '\x18Raptoreum Signed Message:\n',
 				bech32: 'rc',
@@ -96,7 +96,8 @@ module.exports = {
 			port: 10225,
 			dnsSeeds: [
 				'explorer.raptoreum.com'
-			]
+			],
+			assetSupported: true,
 		},
 		TNOWP : {
 			bitcoinjs : {

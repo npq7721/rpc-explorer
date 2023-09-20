@@ -43,7 +43,7 @@ class Session {
 		return false;
 	}
 
-	parseAddressRequest(assetSupported) {
+	parseAddressRequest(assetSupported, hasassets) {
 		var limit = this.config.site.addressTxPageSize;
 		var startBlock = 1;
 		var numBlocks = 10000;
@@ -99,7 +99,7 @@ class Session {
 				}
 			}
 		}
-		if(assetSupported) {
+		if(assetSupported || hasassets) {
 			if(this.req.query.assetName) {
 				assetName = this.req.query.assetName;
 				this.res.locals.paginationBaseUrl = `/addressview/${address}?assetName=${assetName}&sort=${sort}`;
@@ -327,11 +327,11 @@ class Session {
 			self.next();
 		});
 	}
-	renderTransactions(assetSupported) {
+	renderTransactions(assetSupported, hasassets) {
 		var cacheKey;
 		var query = this.res.locals;
 		//console.log(query);
-		if(assetSupported) {
+		if(assetSupported || hasassets) {
 			cacheKey = `address-transaction-view-${query.address}-${query.assetName}-${query.sort}-${query.limit}-${query.offset}`
 		} else {
 			cacheKey = `address-transaction-view-${query.address}-${query.sort}-${query.limit}-${query.offset}-${query.startBlock}-${query.numBlocks}`
@@ -339,13 +339,13 @@ class Session {
 		this.renderDynamicView(query, "includes/address-transaction.pug", cacheKey, this.getAddressMetaData.bind(this));
 	}
 
-	renderAddressView(assetSupported) {
-		this.parseAddressRequest(assetSupported);
-		this.renderTransactions(assetSupported);
+	renderAddressView(assetSupported, hasassets) {
+		this.parseAddressRequest(assetSupported, hasassets);
+		this.renderTransactions(assetSupported, hasassets);
 	}
 
-	renderAddressPage(assetSupported) {
-		this.parseAddressRequest(assetSupported);
+	renderAddressPage(assetSupported, hasassets) {
+		this.parseAddressRequest(assetSupported, hasassets);
 		var self = this;
 		this.getAddressSummary().then(async () => {
 			var currentBlock;
@@ -396,7 +396,17 @@ class Session {
 								result.addressDetails.assets[bal.assetName] = bal.balance;
 							}
 						} else {
-							result.addressDetails.balanceSat = balData.balance;
+							if (balData.balance) {
+								result.addressDetails.balanceSat = balData.balance;
+							} else {
+								result.addressDetails.assets = {};
+								for(var it in balData){
+									if (it == "RTM")
+										result.addressDetails.balanceSat = balData[it].balance;
+									else
+										result.addressDetails.assets[it] = balData[it].balance;
+								}
+							}
 						}
 						resolve();
 					}).catch(reject);
