@@ -58,7 +58,7 @@ div(class="row monospace")
 									- var tokenName = config.coin;
 									include ./value-display.pug
 								else if(txVin.value || txVin.scriptPubKey)
-									if ( txVin.scriptPubKey.asset)
+									if ( txVin.scriptPubKey && txVin.scriptPubKey.asset)
 										- var currencyValue = txVin.scriptPubKey.asset.amount;
 										- var tokenName = txVin.scriptPubKey.asset.name;
 									else
