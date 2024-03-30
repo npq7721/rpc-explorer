@@ -181,11 +181,12 @@ block content
 												include includes/value-display.pug
 									if (addressDetails && addressDetails.assets)
 										each bal, assetName in addressDetails.assets
-											div(class="row")
-												div(class="summary-split-table-label") #{assetName} Balance
-												div(class="summary-split-table-content monospace")
-													- var value = new Decimal(bal).dividedBy(coinConfig.baseCurrencyUnit.multiplier);
-													span #{value}
+											if(bal)
+												div(class="row")
+													div(class="summary-split-table-label") #{assetName} Balance
+													div(class="summary-split-table-content monospace")
+														- var value = new Decimal(bal).dividedBy(coinConfig.baseCurrencyUnit.multiplier);
+														span #{value}
 
 									if (addressDetails && addressDetails.txCount)
 										div(class="row")
