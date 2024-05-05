@@ -194,7 +194,10 @@ block content
 							span.font-weight-bold.border-dotted(data-toggle="tooltip", title=("Exchange-rate data from: " + coinConfig.exchangeRateData.jsonUrl)) Exchange Rate
 
 							if (global.exchangeRates)
-								p(id="price" class="lead") #{utils.formatExchangedCurrency(1.0, "btc", "฿", 8)}/#{utils.formatExchangedCurrency(1.0, "usd", "$", 6)}
+								p(id="price" class="lead")
+								    | #{utils.formatExchangedCurrency(1.0, "btc", "฿", 8)}
+								    br
+								    | #{utils.formatExchangedCurrency(1.0, "usd", "$", 6)}
 							else
 								p(id="price" class="lead") -
 						div(class=networkSummaryColumnClass)
