@@ -4,6 +4,7 @@ let MasternodeBase = require("./masternodeBase.js");
 
 let Raptoreum = new MasternodeBase("Raptoreum", "RTM", "raptoreum", ["sat", "satoshi"], "smartnode");
 Raptoreum.addProperties({
+	hasassets: true,
 	logoUrl:"/img/logo/rtm.svg",
 	siteTitle:"Raptoreum Explorer",
 	siteDescriptionHtml:"<b>RTM Explorer</b> is <a href='https://github.com/Raptoreum/RTM-rpc-explorer). If you run your own [Raptoreum Full Node](https://github.com/Raptoreum/Raptoreum/releases), **RTM Explorer** can easily run alongside it, communicating via RPC calls. See the project [ReadMe](https://github.com/Raptoreum/RTM-rpc-explorer) for a list of features and instructions for running.",
@@ -109,7 +110,7 @@ Raptoreum.addProperties({
 			nSubsidy -= (multiplier*20 + 750);
 		} else if ( (blockHeight > 5273695) && (blockHeight < 7378633) ) {
 			tempHeight = blockHeight - 5273696;
-			multiplier = Math.floor(tempHeight / owlings);
+			multiplier = Math.floor(tempHeight / owlings) ;
 			nSubsidy -= (multiplier*10 + 3720);
 		} else if ( (blockHeight > 7378633) && (blockHeight < 8399209) ){
 			tempHeight = blockHeight - 7378634;
