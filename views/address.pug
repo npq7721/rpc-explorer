@@ -251,8 +251,7 @@ block content
 															i(class="fas fa-check text-success")
 														else
 															i(class="fas fa-times text-warning")
-					- var hasAsset = addressDetails && addressDetails.assets && Object.keys(addressDetails.assets).length > 0;
-					if (hasAsset)
+					if (coinConfig.hasassets)
 						ul(class='nav nav-tabs mb-3')
 							li(class="nav-item")
 								a(data-toggle="tab", href=`#tab-${coinConfig.ticker}`, class="nav-link active", role="tab", onclick=`ajaxUpdate("/addressview/${address}?assetName=${coinConfig.ticker}", "tab-${coinConfig.ticker}")`) #{coinConfig.ticker}
@@ -261,7 +260,7 @@ block content
 									- var hrefTab = `#tab-${assetName}`
 									li(class="nav-item")
 										a(data-toggle="tab", href=hrefTab, class="nav-link", role="tab", onclick=`ajaxUpdate("/addressview/${address}?assetName=${assetName}&startBlock=${startBlock}&numBlocks=${numBlocks}", "tab-${assetName}")`) #{assetName}
-					if (hasAsset)
+					if (coinConfig.hasassets)
 						div(class="tab-content")
 							div(id=`tab-${coinConfig.ticker}`, class="tab-pane active", role="tabpanel")
 								div(class="spinner-border lazyload", loadurl=`${paginationBaseUrl}&startBlock=${startBlock}&numBlocks=${numBlocks}`, role="status")
